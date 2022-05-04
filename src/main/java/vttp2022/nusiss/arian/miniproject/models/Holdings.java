@@ -2,41 +2,47 @@ package vttp2022.nusiss.arian.miniproject.models;
 
 import java.sql.Timestamp;
 
-import org.springframework.jdbc.support.rowset.SqlRowSet;
-
-public class User {
+public class Holdings {
     
-    private Integer userId;
-    private String username;
-    private String password;
+    private String symbol;
+    private Integer quantity;
+    private Float costBasis;
+    private Float currentPrice;
     private Boolean isActive;
     private Timestamp createdAt;
     private Timestamp updatedAt;
     private String portfolioId;
 
- 
-    public Integer getUserId() {
-        return userId;
+    public String getSymbol() {
+        return symbol;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setSymbol(String symbol) {
+        this.symbol = symbol;
     }
 
-    public String getUsername() {
-        return username;
+    public Integer getQuantity() {
+        return quantity;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 
-    public String getPassword() {
-        return password;
+    public Float getCostBasis() {
+        return costBasis;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setCostBasis(Float costBasis) {
+        this.costBasis = costBasis;
+    }
+
+    public Float getCurrentPrice() {
+        return currentPrice;
+    }
+
+    public void setCurrentPrice(Float currentPrice) {
+        this.currentPrice = currentPrice;
     }
 
     public Boolean getIsActive() {
@@ -63,26 +69,12 @@ public class User {
         this.updatedAt = updatedAt;
     }
 
-    
-
     public String getPortfolioId() {
         return portfolioId;
     }
 
     public void setPortfolioId(String portfolioId) {
         this.portfolioId = portfolioId;
-    }
-
-
-    public static User create(SqlRowSet rs){
-        User user = new User();
-
-        user.userId = rs.getInt("id");
-        user.username = rs.getString("username");
-        user.password = rs.getString("password");
-
-
-        return user;
     }
 
 }
