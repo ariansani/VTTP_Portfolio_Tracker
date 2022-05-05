@@ -114,7 +114,7 @@ public class Holdings {
             Double percentageChange =  o.getJsonNumber("dp").doubleValue();
             holding.setCurrentPrice(floatVal);
             holding.setPercentageChange(percentageChange);
-
+            
 
         } catch (Exception e) {
             //TODO: handle exception

@@ -130,6 +130,13 @@ public class LoginController {
 
     }
 
+    @GetMapping(path = "/manage")
+    public ModelAndView managePortfolio(HttpSession sess) {
+
+        return new ModelAndView("redirect:/protected/manage/portfolio");
+
+    }
+
     private User create(MultiValueMap<String, String> form) {
 
         User user = new User();

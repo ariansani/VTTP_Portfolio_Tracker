@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import vttp2022.nusiss.arian.miniproject.exceptions.PortfolioException;
@@ -21,15 +22,37 @@ import vttp2022.nusiss.arian.miniproject.models.User;
 import vttp2022.nusiss.arian.miniproject.services.PortfolioService;
 
 @Controller
-@RequestMapping(path="/protected/{view}")
+@RequestMapping
 public class ProtectedController {
   
     
     @Autowired
     private PortfolioService portSvc;
 
-    @GetMapping
-    @PostMapping
+    @GetMapping(path = "/protected/manage/{view}")
+    public ModelAndView managePortfolio(@PathVariable String view,HttpSession sess){
+        
+        ModelAndView mvc = new ModelAndView();
+        mvc.setViewName(view);
+        User authUser = (User) sess.getAttribute("authUserSess");
+        String portfolioId = authUser.getPortfolioId();
+        List<Holdings> holdings = new LinkedList<>();
+        try {
+             holdings =  portSvc.findHoldingsByPortfolioId(portfolioId);
+        } catch (PortfolioException e) {
+            e.printStackTrace();
+        }
+
+
+        mvc.addObject("holdings", holdings);
+        mvc.setStatus(HttpStatus.OK);
+        
+        return mvc;
+
+    }
+
+    @GetMapping(path="/protected/{view}")
+    @PostMapping(path="/protected/{view}")
     public ModelAndView post(@PathVariable String view,HttpSession sess){
 
        
@@ -72,8 +95,6 @@ public class ProtectedController {
        
         }
            
-
-
         mvc.addObject("holdings", updatedPriceAndPercentage);
         mvc.addObject("treeMapData",updatedPriceAndPercentage);
         //mvc.addObject("username",username);
