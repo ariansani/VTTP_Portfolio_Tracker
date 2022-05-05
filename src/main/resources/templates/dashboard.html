@@ -10,13 +10,27 @@
       type="text/css"
       href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css"
     />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css"
+      integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     <style>
       body {
-        margin: 2em;
+        margin: 3em;
       }
       .highcharts-figure,
       .highcharts-data-table table {
-        min-width: 30%;
+        min-width: 25%;
         max-width: 700px;
         margin: 1em auto;
         float: right;
@@ -68,7 +82,7 @@
     </style>
   </head>
   <body>
-    <br />
+    <!-- <br />
     <span> Auth User Id<code data-th-text="${authUser.userId}"></code></span>
     <br />
     <span>
@@ -78,7 +92,7 @@
     ></span>
     <span>
       Portfolio Id<code data-th-text="${authUser.portfolioId}"></code
-    ></span>
+    ></span> -->
     <div id="highCharts">
       <div id="chartContainer"></div>
       <figure class="highcharts-figure">
@@ -86,7 +100,12 @@
       </figure>
     </div>
 
-    <h1 style="clear: both">Portfolio Holdings</h1>
+    <div style="clear: both; text-align: center;">
+      <h3 style="display:inline-block; margin:auto;" >Portfolio Holdings</h3>
+      <form action="/manage" method="get" style="display:inline-block">
+        <button class="btn btn-lg btn-secondary" type="submit">Manage your portfolio</button>
+      </form>
+    </div>
     <table border="1" id="portfolio" class="display">
       <thead>
         <tr>
@@ -107,7 +126,7 @@
     </table>
 
     <form action="/logout" method="get">
-      <button type="submit">Logout</button>
+      <button class="btn btn-lg btn-danger" type="submit">Logout</button>
     </form>
     <script
       src="https://code.jquery.com/jquery-3.6.0.min.js"
@@ -132,7 +151,6 @@
 
 <script th:inline="javascript">
   $(document).ready(function () {
-
     $("#portfolio").DataTable();
 
     let treeMapData = /*[[${treeMapData}]]*/ [];
@@ -140,7 +158,8 @@
     let data = [];
     for (var i = 0; i < treeMapData.length; i++) {
       var object = {};
-      object.name = treeMapData[i].symbol + '<br/>' +treeMapData[i].percentageChange;
+      object.name =
+        treeMapData[i].symbol + "<br/>" + treeMapData[i].percentageChange;
       object.value = treeMapData[i].quantity * treeMapData[i].costBasis;
       object.colorValue = treeMapData[i].percentageChange;
       data.push(object);
@@ -163,7 +182,7 @@
         title: {
           text: "Today's Performance",
         },
-        // tooltip: 
+        // tooltip:
         // {
         //   formatter: function () {
         //     return "<strong>" + this.key + ": </strong>" + this.y;
@@ -216,6 +235,9 @@
         },
 
         series: seriesOptions,
+        title: {
+          text: "Normalized Performance (Annual)",
+        },
       });
     }
 
