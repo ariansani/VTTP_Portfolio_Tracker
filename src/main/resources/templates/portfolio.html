@@ -28,15 +28,19 @@
       body {
         margin: 4em;
       }
-    
     </style>
   </head>
   <body>
-   
-
-    <div style="clear: both; text-align: center;">
-      <h3 style="display:inline-block; margin:auto;" >Portfolio Holdings</h3>
-        <button class="btn btn-lg btn-success" style="display:inline-block" type="submit">Add</button>
+    <div style="clear: both; text-align: center">
+      <h3 style="display: inline-block; margin: auto">Portfolio Holdings</h3>
+      <button
+        class="btn btn-lg btn-success"
+        aria-label="Enter a ticker symbol"
+        id="addBtn"
+        name="addBtn"
+      >
+        Add
+      </button>
     </div>
     <table border="1" id="portfolio" class="display">
       <thead>
@@ -60,22 +64,47 @@
     <form action="/logout" method="get">
       <button class="btn btn-lg btn-danger" type="submit">Logout</button>
     </form>
-    <script
-      src="https://code.jquery.com/jquery-3.6.0.min.js"
-      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-      crossorigin="anonymous"
-    ></script>
-    <script
-      type="text/javascript"
-      charset="utf8"
-      src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"
-    ></script>
-   
   </body>
 </html>
 
+<script
+  src="https://code.jquery.com/jquery-3.6.0.min.js"
+  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+  crossorigin="anonymous"
+></script>
+<script
+  type="text/javascript"
+  charset="utf8"
+  src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"
+></script>
+
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script th:inline="javascript">
   $(document).ready(function () {
     $("#portfolio").DataTable();
+
+    $("#addBtn").on("click", function () {
+      (async () => {
+        const { value: ticker } = await Swal.fire({
+          title: "Enter a stock by their ticker symbol (US)",
+          input: "text",
+          inputLabel: "Enter Ticker Symbol",
+          showCancelButton: true,
+          inputValidator: (value) => {
+            if (!value) {
+              return "You need to write something!";
+            }
+          },
+        });
+
+        if (ticker) {
+          Swal.fire({
+            icon: "info",
+            title: "Just a moment...",
+            text: `Finding price information for : ${ticker}`,
+          });
+        }
+      })();
+    });
   });
 </script>
