@@ -1,17 +1,33 @@
 package vttp2022.nusiss.arian.miniproject.models;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonReader;
+
 public class Holdings {
-    
+    private Integer id;
     private String symbol;
     private Integer quantity;
     private Float costBasis;
-    private Float currentPrice;
+    private Double currentPrice;
+    private Double percentageChange;
     private Boolean isActive;
     private Timestamp createdAt;
     private Timestamp updatedAt;
     private String portfolioId;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getSymbol() {
         return symbol;
@@ -37,11 +53,11 @@ public class Holdings {
         this.costBasis = costBasis;
     }
 
-    public Float getCurrentPrice() {
+    public Double getCurrentPrice() {
         return currentPrice;
     }
 
-    public void setCurrentPrice(Float currentPrice) {
+    public void setCurrentPrice(Double currentPrice) {
         this.currentPrice = currentPrice;
     }
 
@@ -75,6 +91,37 @@ public class Holdings {
 
     public void setPortfolioId(String portfolioId) {
         this.portfolioId = portfolioId;
+    }
+
+    public Double getPercentageChange() {
+        return percentageChange;
+    }
+
+    public void setPercentageChange(Double percentageChange) {
+        this.percentageChange = percentageChange;
+    }
+
+    public static Holdings create(String json,String symbol,Integer holdingId){
+        Holdings holding = new Holdings();
+        holding.setSymbol(symbol);
+        holding.setId(holdingId);
+
+        try (InputStream is = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8))) {
+            
+            JsonReader r = Json.createReader(is);
+            JsonObject o = r.readObject();
+            Double floatVal =  o.getJsonNumber("c").doubleValue();
+            Double percentageChange =  o.getJsonNumber("dp").doubleValue();
+            holding.setCurrentPrice(floatVal);
+            holding.setPercentageChange(percentageChange);
+
+
+        } catch (Exception e) {
+            //TODO: handle exception
+            e.printStackTrace();
+            return null;
+        }
+        return holding;
     }
 
 }

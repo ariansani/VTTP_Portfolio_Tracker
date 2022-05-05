@@ -4,16 +4,69 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Dashboard</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css"
+    />
+    <style>
+      .highcharts-figure,
+      .highcharts-data-table table {
+        min-width: 30%;
+        max-width: 700px;
+        margin: 1em auto;
+        float: right;
+      }
+
+      .highcharts-data-table table {
+        font-family: Verdana, sans-serif;
+        border-collapse: collapse;
+        border: 1px solid #ebebeb;
+        margin: 10px auto;
+        width: 100%;
+        max-width: 500px;
+      }
+
+      .highcharts-data-table caption {
+        padding: 1em 0;
+        font-size: 1.2em;
+        color: #555;
+      }
+
+      .highcharts-data-table th {
+        font-weight: 600;
+        padding: 0.5em;
+      }
+
+      .highcharts-data-table td,
+      .highcharts-data-table th,
+      .highcharts-data-table caption {
+        padding: 0.5em;
+      }
+
+      .highcharts-data-table thead tr,
+      .highcharts-data-table tr:nth-child(even) {
+        background: #f8f8f8;
+      }
+
+      .highcharts-data-table tr:hover {
+        background: #f1f7ff;
+      }
+      #chartContainer {
+        height: 400px;
+        min-width: 68% !important;
+         position:relative;
+        float:left; 
+      }
+      #highCharts{
+        margin:auto;
+      }
+    </style>
   </head>
   <body>
-   
     <br />
-    <span>
-      Auth User Id<code
-        data-th-text="${authUser.userId}"
-      ></code
-    ></span>
+    <span> Auth User Id<code data-th-text="${authUser.userId}"></code></span>
     <br />
     <span>
       Welcome (From Session User Object**)<code
@@ -21,13 +74,186 @@
       ></code
     ></span>
     <span>
-       Portfolio Id<code
-          data-th-text="${authUser.portfolioId}"
-        ></code
-      ></span>
+      Portfolio Id<code data-th-text="${authUser.portfolioId}"></code
+    ></span>
+    <div id="highCharts">
+    <div id="chartContainer"></div>
+    <figure class="highcharts-figure">
+      <div id="container"></div>
+    </figure>
+    </div>
+
+    <h1 style="clear:both;">Portfolio Holdings</h1>
+    <table border="1" id="portfolio" class="display">
+      <thead>
+        <tr>
+          <th>Ticker Symbol</th>
+          <th>Quantity</th>
+          <th>Cost Basis</th>
+          <th>Current Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-th-each="holding : ${holdings}">
+          <td data-th-text="${holding.getSymbol}"></td>
+          <td data-th-text="${holding.getQuantity}"></td>
+          <td data-th-text="${holding.getCostBasis}"></td>
+          <td data-th-text="${holding.getCurrentPrice}"></td>
+        </tr>
+      </tbody>
+    </table>
 
     <form action="/logout" method="get">
-        <button type="submit">Logout</button>
+      <button type="submit">Logout</button>
     </form>
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
+      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      type="text/javascript"
+      charset="utf8"
+      src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"
+    ></script>
+    <script src="https://code.highcharts.com/stock/highstock.js"></script>
+    <script src="https://code.highcharts.com/stock/modules/data.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/heatmap.js"></script>
+    <script src="https://code.highcharts.com/modules/treemap.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
   </body>
-</html> 
+</html>
+
+<script>
+  $(document).ready(function () {
+    $("#portfolio").DataTable();
+
+    Highcharts.chart("container", {
+      colorAxis: {
+        minColor: "#FF0000",
+        maxColor: "#00FF00",
+      },
+      series: [
+        {
+          type: "treemap",
+          layoutAlgorithm: "squarified",
+          data: [
+            {
+              name: "A",
+              value: 18000,
+              colorValue: -0.91,
+            },
+            {
+              name: "B",
+              value: 12000,
+              colorValue: 2,
+            },
+            {
+              name: "C",
+              value: 14000,
+              colorValue: 3,
+            },
+            {
+              name: "D",
+              value: 11500,
+              colorValue: 4,
+            },
+            {
+              name: "E",
+              value: 10000,
+              colorValue: 5,
+            },
+            {
+              name: "F",
+              value: 2,
+              colorValue: 6,
+            },
+          ],
+        },
+      ],
+      title: {
+        text: "Today's Performance",
+      },
+    });
+  });
+
+  var seriesOptions = [],
+    seriesCounter = 0,
+    names = ["MSFT", "AAPL", "GOOG"];
+
+  /**
+   * Create the chart when all data is loaded
+   * @return {undefined}
+   */
+  function createChart() {
+    Highcharts.stockChart("chartContainer", {
+      rangeSelector: {
+        selected: 4,
+      },
+
+      yAxis: {
+        labels: {
+          formatter: function () {
+            return (this.value > 0 ? " + " : "") + this.value + "%";
+          },
+        },
+        plotLines: [
+          {
+            value: 0,
+            width: 2,
+            color: "silver",
+          },
+        ],
+      },
+
+      plotOptions: {
+        series: {
+          compare: "percent",
+          showInNavigator: true,
+        },
+      },
+
+      tooltip: {
+        pointFormat:
+          '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.change}%)<br/>',
+        valueDecimals: 2,
+        split: true,
+      },
+
+      series: seriesOptions,
+    });
+  }
+
+  function success(data) {
+    var name = this.url.match(/(msft|aapl|goog)/)[0].toUpperCase();
+    var i = names.indexOf(name);
+    seriesOptions[i] = {
+      name: name,
+      data: data,
+    };
+
+    // As we're loading the data asynchronously, we don't know what order it
+    // will arrive. So we keep a counter and create the chart when all the data is loaded.
+    seriesCounter += 1;
+
+    if (seriesCounter === names.length) {
+      createChart();
+    }
+  }
+
+  Highcharts.getJSON(
+    "https://cdn.jsdelivr.net/gh/highcharts/highcharts@v7.0.0/samples/data/msft-c.json",
+    success
+  );
+  Highcharts.getJSON(
+    "https://cdn.jsdelivr.net/gh/highcharts/highcharts@v7.0.0/samples/data/aapl-c.json",
+    success
+  );
+  Highcharts.getJSON(
+    "https://cdn.jsdelivr.net/gh/highcharts/highcharts@v7.0.0/samples/data/goog-c.json",
+    success
+  );
+</script>
