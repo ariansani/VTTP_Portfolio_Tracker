@@ -71,14 +71,11 @@ public class ProtectedController {
             
        
         }
-         //push this latest list to MVC for heatmap
-        // System.out.println(updatedPriceAndPercentage.get(0).getSymbol());
-        // System.out.println(updatedPriceAndPercentage.get(0).getCurrentPrice());
-        // System.out.println(updatedPriceAndPercentage.get(0).getPercentageChange());
            
 
 
         mvc.addObject("holdings", updatedPriceAndPercentage);
+        mvc.addObject("treeMapData",updatedPriceAndPercentage);
         //mvc.addObject("username",username);
         mvc.addObject("portfolioId",portfolioId);
         mvc.addObject("authUser", authUser);

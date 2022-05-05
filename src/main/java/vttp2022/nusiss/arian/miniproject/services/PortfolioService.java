@@ -69,7 +69,7 @@ public class PortfolioService {
         }
 
         try {
-            System.out.println(resp.getBody().toString());
+            
             Holdings holding = Holdings.create(resp.getBody(),symbol,holdingId);
             return Optional.of(holding);
         } catch (Exception e) {

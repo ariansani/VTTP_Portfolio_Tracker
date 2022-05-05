@@ -11,6 +11,9 @@
       href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css"
     />
     <style>
+      body {
+        margin: 2em;
+      }
       .highcharts-figure,
       .highcharts-data-table table {
         min-width: 30%;
@@ -56,11 +59,11 @@
       #chartContainer {
         height: 400px;
         min-width: 68% !important;
-         position:relative;
-        float:left; 
+        position: relative;
+        float: left;
       }
-      #highCharts{
-        margin:auto;
+      #highCharts {
+        margin: auto;
       }
     </style>
   </head>
@@ -77,13 +80,13 @@
       Portfolio Id<code data-th-text="${authUser.portfolioId}"></code
     ></span>
     <div id="highCharts">
-    <div id="chartContainer"></div>
-    <figure class="highcharts-figure">
-      <div id="container"></div>
-    </figure>
+      <div id="chartContainer"></div>
+      <figure class="highcharts-figure">
+        <div id="container"></div>
+      </figure>
     </div>
 
-    <h1 style="clear:both;">Portfolio Holdings</h1>
+    <h1 style="clear: both">Portfolio Holdings</h1>
     <table border="1" id="portfolio" class="display">
       <thead>
         <tr>
@@ -127,133 +130,123 @@
   </body>
 </html>
 
-<script>
+<script th:inline="javascript">
   $(document).ready(function () {
+
     $("#portfolio").DataTable();
 
-    Highcharts.chart("container", {
-      colorAxis: {
-        minColor: "#FF0000",
-        maxColor: "#00FF00",
-      },
-      series: [
-        {
-          type: "treemap",
-          layoutAlgorithm: "squarified",
-          data: [
-            {
-              name: "A",
-              value: 18000,
-              colorValue: -0.91,
+    let treeMapData = /*[[${treeMapData}]]*/ [];
+    var series = [];
+    let data = [];
+    for (var i = 0; i < treeMapData.length; i++) {
+      var object = {};
+      object.name = treeMapData[i].symbol + '<br/>' +treeMapData[i].percentageChange;
+      object.value = treeMapData[i].quantity * treeMapData[i].costBasis;
+      object.colorValue = treeMapData[i].percentageChange;
+      data.push(object);
+    }
+    var seriesObject = {
+      type: "treemap",
+      layoutAlgorithm: "squarified",
+      data: data,
+    };
+    series.push(seriesObject);
+    drawHeatmap(series);
+
+    function drawHeatmap(series) {
+      Highcharts.chart("container", {
+        colorAxis: {
+          minColor: "#FF0000",
+          maxColor: "#00FF00",
+        },
+        series: series,
+        title: {
+          text: "Today's Performance",
+        },
+        // tooltip: 
+        // {
+        //   formatter: function () {
+        //     return "<strong>" + this.key + ": </strong>" + this.y;
+        //   },
+        // },
+      });
+    }
+
+    var seriesOptions = [],
+      seriesCounter = 0,
+      names = ["MSFT", "AAPL", "GOOG"];
+
+    /**
+     * Create the chart when all data is loaded
+     * @return {undefined}
+     */
+    function createChart() {
+      Highcharts.stockChart("chartContainer", {
+        rangeSelector: {
+          selected: 4,
+        },
+
+        yAxis: {
+          labels: {
+            formatter: function () {
+              return (this.value > 0 ? " + " : "") + this.value + "%";
             },
+          },
+          plotLines: [
             {
-              name: "B",
-              value: 12000,
-              colorValue: 2,
-            },
-            {
-              name: "C",
-              value: 14000,
-              colorValue: 3,
-            },
-            {
-              name: "D",
-              value: 11500,
-              colorValue: 4,
-            },
-            {
-              name: "E",
-              value: 10000,
-              colorValue: 5,
-            },
-            {
-              name: "F",
-              value: 2,
-              colorValue: 6,
+              value: 0,
+              width: 2,
+              color: "silver",
             },
           ],
         },
-      ],
-      title: {
-        text: "Today's Performance",
-      },
-    });
-  });
 
-  var seriesOptions = [],
-    seriesCounter = 0,
-    names = ["MSFT", "AAPL", "GOOG"];
-
-  /**
-   * Create the chart when all data is loaded
-   * @return {undefined}
-   */
-  function createChart() {
-    Highcharts.stockChart("chartContainer", {
-      rangeSelector: {
-        selected: 4,
-      },
-
-      yAxis: {
-        labels: {
-          formatter: function () {
-            return (this.value > 0 ? " + " : "") + this.value + "%";
+        plotOptions: {
+          series: {
+            compare: "percent",
+            showInNavigator: true,
           },
         },
-        plotLines: [
-          {
-            value: 0,
-            width: 2,
-            color: "silver",
-          },
-        ],
-      },
 
-      plotOptions: {
-        series: {
-          compare: "percent",
-          showInNavigator: true,
+        tooltip: {
+          pointFormat:
+            '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.change}%)<br/>',
+          valueDecimals: 2,
+          split: true,
         },
-      },
 
-      tooltip: {
-        pointFormat:
-          '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.change}%)<br/>',
-        valueDecimals: 2,
-        split: true,
-      },
-
-      series: seriesOptions,
-    });
-  }
-
-  function success(data) {
-    var name = this.url.match(/(msft|aapl|goog)/)[0].toUpperCase();
-    var i = names.indexOf(name);
-    seriesOptions[i] = {
-      name: name,
-      data: data,
-    };
-
-    // As we're loading the data asynchronously, we don't know what order it
-    // will arrive. So we keep a counter and create the chart when all the data is loaded.
-    seriesCounter += 1;
-
-    if (seriesCounter === names.length) {
-      createChart();
+        series: seriesOptions,
+      });
     }
-  }
 
-  Highcharts.getJSON(
-    "https://cdn.jsdelivr.net/gh/highcharts/highcharts@v7.0.0/samples/data/msft-c.json",
-    success
-  );
-  Highcharts.getJSON(
-    "https://cdn.jsdelivr.net/gh/highcharts/highcharts@v7.0.0/samples/data/aapl-c.json",
-    success
-  );
-  Highcharts.getJSON(
-    "https://cdn.jsdelivr.net/gh/highcharts/highcharts@v7.0.0/samples/data/goog-c.json",
-    success
-  );
+    function success(data) {
+      var name = this.url.match(/(msft|aapl|goog)/)[0].toUpperCase();
+      var i = names.indexOf(name);
+      seriesOptions[i] = {
+        name: name,
+        data: data,
+      };
+
+      // As we're loading the data asynchronously, we don't know what order it
+      // will arrive. So we keep a counter and create the chart when all the data is loaded.
+      seriesCounter += 1;
+
+      if (seriesCounter === names.length) {
+        createChart();
+      }
+    }
+
+    Highcharts.getJSON(
+      "https://cdn.jsdelivr.net/gh/highcharts/highcharts@v7.0.0/samples/data/msft-c.json",
+      success
+    );
+    Highcharts.getJSON(
+      "https://cdn.jsdelivr.net/gh/highcharts/highcharts@v7.0.0/samples/data/aapl-c.json",
+      success
+    );
+    Highcharts.getJSON(
+      "https://cdn.jsdelivr.net/gh/highcharts/highcharts@v7.0.0/samples/data/goog-c.json",
+      success
+    );
+  });
 </script>
