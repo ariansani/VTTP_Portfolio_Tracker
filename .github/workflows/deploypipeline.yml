@@ -5,25 +5,30 @@ on:
       - 'v*'
 jobs:
   build:
+    name: Create Release
     runs-on: ubuntu-latest
     steps:
-    - name: Create GitHub release
-      uses: Roang-zero1/github-create-release-action@master
-      with:
-        version_regex: ^v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+
-      env:
-        GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-    - name: Checkout my repository
-      uses: actions/checkout@v3
-    - name: DeployHeroku with github secrets
-      uses: akhileshns/heroku-deploy@v3.12.12 
-      with:
-        heroku_api_key: ${{ secrets.heroku_api_key }}
-        heroku_app_name: portfolio-tracker-arian
-        heroku_email: ${{ secrets.heroku_email }}
-        branch: ${{ github.ref_name }}
-      env:
-        HD_SPRING_DATASOURCE_URL: ${{ secrets.SPRING_DATASOURCE_URL }}
-        HD_SPRING_DATASOURCE_USERNAME: ${{ secrets.SPRING_DATASOURCE_USERNAME }}
-        HD_SPRING_DATASOURCE_PASSWORD: ${{ secrets.SPRING_DATASOURCE_PASSWORD }}
-        HD_FINNHUB_API_KEY : ${{secrets.FINNHUB_API_KEY}}
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+      - name: DeployHeroku with github secrets
+        uses: akhileshns/heroku-deploy@v3.12.12 
+        with:
+          heroku_api_key: ${{ secrets.heroku_api_key }}
+          heroku_app_name: portfolio-tracker-arian
+          heroku_email: ${{ secrets.heroku_email }}
+          branch: ${{ github.ref_name }}
+        env:
+          HD_SPRING_DATASOURCE_URL: ${{ secrets.SPRING_DATASOURCE_URL }}
+          HD_SPRING_DATASOURCE_USERNAME: ${{ secrets.SPRING_DATASOURCE_USERNAME }}
+          HD_SPRING_DATASOURCE_PASSWORD: ${{ secrets.SPRING_DATASOURCE_PASSWORD }}
+          HD_FINNHUB_API_KEY : ${{secrets.FINNHUB_API_KEY}}
