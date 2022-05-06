@@ -1,4 +1,4 @@
-name: deploy heroku, publish release on github
+name: deploy heroku, publish release
 on:
   push:
     tags:
@@ -13,7 +13,8 @@ jobs:
         version_regex: ^v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+
       env:
         GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-    - uses: actions/checkout@v3
+    - name: Checkout my repository
+      uses: actions/checkout@v3
     - name: DeployHeroku with github secrets
       uses: akhileshns/heroku-deploy@v3.12.12 
       with:
