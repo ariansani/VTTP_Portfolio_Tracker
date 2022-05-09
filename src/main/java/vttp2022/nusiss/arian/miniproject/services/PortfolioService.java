@@ -18,12 +18,14 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import vttp2022.nusiss.arian.miniproject.exceptions.PortfolioException;
 import vttp2022.nusiss.arian.miniproject.models.Holdings;
+import vttp2022.nusiss.arian.miniproject.models.Stock;
 import vttp2022.nusiss.arian.miniproject.repositories.PortfolioRepository;
 
 @Service
 public class PortfolioService {
     
     private static final String QUOTE_URL = "https://finnhub.io/api/v1/quote";
+    private static final String STOCK_URL = "https://finnhub.io/api/v1/stock/metric";
 
     @Value("${finnhub.api.key}")
     private String apiKey;
@@ -106,6 +108,49 @@ public class PortfolioService {
         if (!portfolioRepo.updateCurrPrice(symbol,currentPrice))
             throw new PortfolioException("Unable to update the current price of".formatted(symbol));
 
+
+    }
+
+    public Optional<Stock> retrieveStockByTicker(String symbol){
+
+        String quoteUrl = UriComponentsBuilder.fromUriString(STOCK_URL)
+        .queryParam("symbol", symbol)
+        .queryParam("metric","all")
+        .toUriString();
+
+         HttpHeaders headers = new HttpHeaders();
+         headers.add("X-Finnhub-Token", apiKey);
+
+         RequestEntity<Void> req = RequestEntity
+                .get(quoteUrl)
+                .headers(headers)
+                .accept(MediaType.APPLICATION_JSON)
+                .build();
+
+        RestTemplate template = new RestTemplate();
+
+        ResponseEntity<String> resp = null;
+
+        try {
+            resp = template.exchange(req, String.class);
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+
+        if (resp.getStatusCodeValue() >= 400) {
+            return Optional.empty();
+        }
+
+        try {
+            
+            Stock stock = Stock.create(resp.getBody(),symbol);
+        
+            return Optional.of(stock);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Optional.empty();
 
     }
 

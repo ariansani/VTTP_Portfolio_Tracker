@@ -102,9 +102,47 @@
             icon: "info",
             title: "Just a moment...",
             text: `Finding price information for : ${ticker}`,
+            timer: 2600,
+            timerProgressBar: true,
+            didOpen: () => {
+              Swal.showLoading();
+            },
+          }).then((result) => {
+            if (result.dismiss === Swal.DismissReason.timer) {
+              searchStockAjax();
+            }
           });
-        }
-      })();
-    });
-  });
+
+          function searchStockAjax() {
+            let request = $.ajax({
+              type: "POST",
+              contentType: "text/plain",
+              url: "/search",
+              data: ticker,
+              dataType: "text",
+            });
+
+            request.done(function (msg) {
+              alert("Hola amigos, working on it ");
+            });
+
+            request.fail(function () {
+              Swal.fire({
+                icon: "error",
+                title: "Sorry!",
+                text: "Unable to find stock data for " + ticker,
+                timer: 400,
+                timerProgressBar: true,
+                footer: "Currently we only support US Equities",
+              }).then((result) => {
+                if (result.dismiss === Swal.DismissReason.timer) {
+                  document.getElementById("addBtn").click();
+                }
+              });
+            }); //end of request fail
+          }
+        } //end of ticker
+      })(); //end of async
+    }); //end of addBtn click
+  }); //end of document ready
 </script>
