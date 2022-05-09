@@ -28,6 +28,10 @@
       body {
         margin: 4em;
       }
+      body.swal2-shown > [aria-hidden="true"] {
+        transition: 0.1s filter;
+        filter: blur(10px);
+      }
     </style>
   </head>
   <body>
@@ -123,19 +127,38 @@
             });
 
             request.done(function (msg) {
-              alert("Hola amigos, working on it ");
+              (async () => {
+                const { value: formValues } = await Swal.fire({
+                  title: `Adding ${ticker} to your portfolio`,
+                  html:
+                    'Quantity <input id="swal-input1" type=number class="swal2-input"><br/>' +
+                    'Cost Basis <input id="swal-input2" type=number class="swal2-input">',
+                  focusConfirm: false,
+                  preConfirm: () => {
+                    return [
+                      document.getElementById("swal-input1").value,
+                      document.getElementById("swal-input2").value,
+                    ];
+                  },
+                });
+
+                if (formValues) {
+                  Swal.fire(JSON.stringify(formValues));
+                }
+              })();
+             
             });
 
             request.fail(function () {
               Swal.fire({
                 icon: "error",
                 title: "Sorry!",
-                text: "Unable to find stock data for " + ticker,
-                timer: 400,
-                timerProgressBar: true,
+                text: `Unable to find stock data for ${ticker}`,
+                confirmButtonColor: "#3085d6",
+                confirmButtonText: "Back",
                 footer: "Currently we only support US Equities",
               }).then((result) => {
-                if (result.dismiss === Swal.DismissReason.timer) {
+                if (result.isConfirmed) {
                   document.getElementById("addBtn").click();
                 }
               });
