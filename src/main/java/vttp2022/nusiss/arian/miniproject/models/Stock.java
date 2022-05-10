@@ -10,26 +10,26 @@ import jakarta.json.JsonReader;
 
 public class Stock {
     private String stockName;
-    private double marketCap;// marketCapitalization
-    private double yearHigh;// 52WeekHigh
-    private double yearLow;// 52WeekLow
-    private double bookValuePerShareQ; // bookValuePerShareQuarterly
-    private double cashPerShareQ; // cashPerSharePerShareQuarterly
-    private double dividendYield; // dividendYieldIndicatedAnnual
-    private double currentRatioQ; // currentRatioQuarterly
-    private double ebitdaCAGR5y; // ebitdaCagr5Y
-    private double epsTTM; // epsInclExtraItemsTTM in json response
-    private double epsGrowth5y; // epsGrowth5Y
-    private double freeCashFlowTTM; // freeCashFlowTTM
-    private double longTermDebtEquityA;// longTermDebt/equityAnnual
-    private double grossMarginTTM; // grossMarginTTM
-    private double netProfitMarginTTM; // netProfitMarginTTM
-    private double operMarginTTM; // operatingMarginTTM
-    private double priceFCFTTM; // pfcfShareTTM
-    private double peRatioTTM; // peInclExtraTTM
-    private double psRatioTTM;// psTTM
-    private double roa; // roaRfy
-    private double roe; // roeRfy
+    private Double marketCap;// marketCapitalization
+    private Double yearHigh;// 52WeekHigh
+    private Double yearLow;// 52WeekLow
+    private Double bookValuePerShareQ; // bookValuePerShareQuarterly
+    private Double cashPerShareQ; // cashPerSharePerShareQuarterly
+    private Double dividendYield; // dividendYieldIndicatedAnnual
+    private Double currentRatioQ; // currentRatioQuarterly
+    private Double ebitdaCAGR5y; // ebitdaCagr5Y
+    private Double epsTTM; // epsInclExtraItemsTTM in json response
+    private Double epsGrowth5y; // epsGrowth5Y
+    private Double freeCashFlowTTM; // freeCashFlowTTM
+    private Double longTermDebtEquityA;// longTermDebt/equityAnnual
+    private Double grossMarginTTM; // grossMarginTTM
+    private Double netProfitMarginTTM; // netProfitMarginTTM
+    private Double operMarginTTM; // operatingMarginTTM
+    private Double priceFCFTTM; // pfcfShareTTM
+    private Double peRatioTTM; // peInclExtraTTM
+    private Double psRatioTTM;// psTTM
+    private Double roa; // roaRfy
+    private Double roe; // roeRfy
 
     public String getStockName() {
         return stockName;
@@ -39,163 +39,163 @@ public class Stock {
         this.stockName = stockName;
     }
 
-    public double getMarketCap() {
+    public Double getMarketCap() {
         return marketCap;
     }
 
-    public void setMarketCap(double marketCap) {
+    public void setMarketCap(Double marketCap) {
         this.marketCap = marketCap;
     }
 
-    public double getYearHigh() {
+    public Double getYearHigh() {
         return yearHigh;
     }
 
-    public void setYearHigh(double yearHigh) {
+    public void setYearHigh(Double yearHigh) {
         this.yearHigh = yearHigh;
     }
 
-    public double getYearLow() {
+    public Double getYearLow() {
         return yearLow;
     }
 
-    public void setYearLow(double yearLow) {
+    public void setYearLow(Double yearLow) {
         this.yearLow = yearLow;
     }
 
-    public double getBookValuePerShareQ() {
+    public Double getBookValuePerShareQ() {
         return bookValuePerShareQ;
     }
 
-    public void setBookValuePerShareQ(double bookValuePerShareQ) {
+    public void setBookValuePerShareQ(Double bookValuePerShareQ) {
         this.bookValuePerShareQ = bookValuePerShareQ;
     }
 
-    public double getCashPerShareQ() {
+    public Double getCashPerShareQ() {
         return cashPerShareQ;
     }
 
-    public void setCashPerShareQ(double cashPerShareQ) {
+    public void setCashPerShareQ(Double cashPerShareQ) {
         this.cashPerShareQ = cashPerShareQ;
     }
 
-    public double getDividendYield() {
+    public Double getDividendYield() {
         return dividendYield;
     }
 
-    public void setDividendYield(double dividendYield) {
+    public void setDividendYield(Double dividendYield) {
         this.dividendYield = dividendYield;
     }
 
-    public double getCurrentRatioQ() {
+    public Double getCurrentRatioQ() {
         return currentRatioQ;
     }
 
-    public void setCurrentRatioQ(double currentRatioQ) {
+    public void setCurrentRatioQ(Double currentRatioQ) {
         this.currentRatioQ = currentRatioQ;
     }
 
-    public double getEbitdaCAGR5y() {
+    public Double getEbitdaCAGR5y() {
         return ebitdaCAGR5y;
     }
 
-    public void setEbitdaCAGR5y(double ebitdaCAGR5y) {
+    public void setEbitdaCAGR5y(Double ebitdaCAGR5y) {
         this.ebitdaCAGR5y = ebitdaCAGR5y;
     }
 
-    public double getEpsTTM() {
+    public Double getEpsTTM() {
         return epsTTM;
     }
 
-    public void setEpsTTM(double epsTTM) {
+    public void setEpsTTM(Double epsTTM) {
         this.epsTTM = epsTTM;
     }
 
-    public double getEpsGrowth5y() {
+    public Double getEpsGrowth5y() {
         return epsGrowth5y;
     }
 
-    public void setEpsGrowth5y(double epsGrowth5y) {
+    public void setEpsGrowth5y(Double epsGrowth5y) {
         this.epsGrowth5y = epsGrowth5y;
     }
 
-    public double getFreeCashFlowTTM() {
+    public Double getFreeCashFlowTTM() {
         return freeCashFlowTTM;
     }
 
-    public void setFreeCashFlowTTM(double freeCashFlowTTM) {
+    public void setFreeCashFlowTTM(Double freeCashFlowTTM) {
         this.freeCashFlowTTM = freeCashFlowTTM;
     }
 
-    public double getLongTermDebtEquityA() {
+    public Double getLongTermDebtEquityA() {
         return longTermDebtEquityA;
     }
 
-    public void setLongTermDebtEquityA(double longTermDebtEquityA) {
+    public void setLongTermDebtEquityA(Double longTermDebtEquityA) {
         this.longTermDebtEquityA = longTermDebtEquityA;
     }
 
-    public double getGrossMarginTTM() {
+    public Double getGrossMarginTTM() {
         return grossMarginTTM;
     }
 
-    public void setGrossMarginTTM(double grossMarginTTM) {
+    public void setGrossMarginTTM(Double grossMarginTTM) {
         this.grossMarginTTM = grossMarginTTM;
     }
 
-    public double getNetProfitMarginTTM() {
+    public Double getNetProfitMarginTTM() {
         return netProfitMarginTTM;
     }
 
-    public void setNetProfitMarginTTM(double netProfitMarginTTM) {
+    public void setNetProfitMarginTTM(Double netProfitMarginTTM) {
         this.netProfitMarginTTM = netProfitMarginTTM;
     }
 
-    public double getOperMarginTTM() {
+    public Double getOperMarginTTM() {
         return operMarginTTM;
     }
 
-    public void setOperMarginTTM(double operMarginTTM) {
+    public void setOperMarginTTM(Double operMarginTTM) {
         this.operMarginTTM = operMarginTTM;
     }
 
-    public double getPriceFCFTTM() {
+    public Double getPriceFCFTTM() {
         return priceFCFTTM;
     }
 
-    public void setPriceFCFTTM(double priceFCFTTM) {
+    public void setPriceFCFTTM(Double priceFCFTTM) {
         this.priceFCFTTM = priceFCFTTM;
     }
 
-    public double getPeRatioTTM() {
+    public Double getPeRatioTTM() {
         return peRatioTTM;
     }
 
-    public void setPeRatioTTM(double peRatioTTM) {
+    public void setPeRatioTTM(Double peRatioTTM) {
         this.peRatioTTM = peRatioTTM;
     }
 
-    public double getPsRatioTTM() {
+    public Double getPsRatioTTM() {
         return psRatioTTM;
     }
 
-    public void setPsRatioTTM(double psRatioTTM) {
+    public void setPsRatioTTM(Double psRatioTTM) {
         this.psRatioTTM = psRatioTTM;
     }
 
-    public double getRoa() {
+    public Double getRoa() {
         return roa;
     }
 
-    public void setRoa(double roa) {
+    public void setRoa(Double roa) {
         this.roa = roa;
     }
 
-    public double getRoe() {
+    public Double getRoe() {
         return roe;
     }
 
-    public void setRoe(double roe) {
+    public void setRoe(Double roe) {
         this.roe = roe;
     }
 
@@ -208,29 +208,52 @@ public class Stock {
             JsonReader r = Json.createReader(is);
             JsonObject jso = r.readObject();
             JsonObject o = jso.getJsonObject("metric");
+            System.out.println(o);
 
-            stock.setMarketCap(o.getJsonNumber("marketCapitalization").doubleValue());// marketCapitalization
+            stock.marketCap = o.isNull("marketCapitalization") ? null
+                    : o.getJsonNumber("marketCapitalization").doubleValue();
 
-            stock.yearHigh = o.getJsonNumber("52WeekHigh").doubleValue();// 52WeekHigh
-            stock.yearLow = o.getJsonNumber("52WeekLow").doubleValue();// 52WeekLow
-            stock.bookValuePerShareQ = o.getJsonNumber("bookValuePerShareQuarterly").doubleValue(); // bookValuePerShareQuarterly
-            stock.cashPerShareQ = o.getJsonNumber("cashPerSharePerShareQuarterly").doubleValue(); // cashPerSharePerShareQuarterly
-            stock.dividendYield = o.getJsonNumber("dividendYieldIndicatedAnnual").doubleValue(); // dividendYieldIndicatedAnnual
-            stock.currentRatioQ = o.getJsonNumber("currentRatioQuarterly").doubleValue(); // currentRatioQuarterly
-            stock.ebitdaCAGR5y = o.getJsonNumber("ebitdaCagr5Y").doubleValue(); // ebitdaCagr5Y
-            stock.epsTTM = o.getJsonNumber("epsInclExtraItemsTTM").doubleValue(); // epsInclExtraItemsTTM in json
-                                                                                  // response
-            stock.epsGrowth5y = o.getJsonNumber("epsGrowth5Y").doubleValue(); // epsGrowth5Y
-            stock.freeCashFlowTTM = o.getJsonNumber("freeCashFlowTTM").doubleValue(); // freeCashFlowTTM
-            stock.longTermDebtEquityA = o.getJsonNumber("longTermDebt/equityAnnual").doubleValue();// longTermDebt/equityAnnual
-            stock.grossMarginTTM = o.getJsonNumber("grossMarginTTM").doubleValue(); // grossMarginTTM
-            stock.netProfitMarginTTM = o.getJsonNumber("netProfitMarginTTM").doubleValue(); // netProfitMarginTTM
-            stock.operMarginTTM = o.getJsonNumber("operatingMarginTTM").doubleValue(); // operatingMarginTTM
-            stock.priceFCFTTM = o.getJsonNumber("pfcfShareTTM").doubleValue(); // pfcfShareTTM
-            stock.peRatioTTM = o.getJsonNumber("peInclExtraTTM").doubleValue(); // peInclExtraTTM
-            stock.psRatioTTM = o.getJsonNumber("psTTM").doubleValue();// psTTM
-            stock.roa = o.getJsonNumber("roaRfy").doubleValue(); // roaRfy
-            stock.roe = o.getJsonNumber("roeRfy").doubleValue(); // roeRfy
+            stock.yearHigh = o.isNull("52WeekHigh") ? null : o.getJsonNumber("52WeekHigh").doubleValue();
+            stock.yearLow = o.isNull("52WeekLow") ? null : o.getJsonNumber("52WeekLow").doubleValue();
+
+            stock.bookValuePerShareQ = o.isNull("bookValuePerShareQuarterly") ? null
+                    : o.getJsonNumber("bookValuePerShareQuarterly").doubleValue(); 
+
+            stock.cashPerShareQ = o.isNull("cashPerSharePerShareQuarterly") ? null
+                    : o.getJsonNumber("cashPerSharePerShareQuarterly").doubleValue(); 
+
+            stock.dividendYield = o.isNull("dividendYieldIndicatedAnnual") ? null
+                    : o.getJsonNumber("dividendYieldIndicatedAnnual").doubleValue(); 
+
+            stock.currentRatioQ = o.isNull("currentRatioQuarterly") ? null
+                    : o.getJsonNumber("currentRatioQuarterly").doubleValue();
+
+            stock.ebitdaCAGR5y = o.isNull("ebitdaCagr5Y") ? null : o.getJsonNumber("ebitdaCagr5Y").doubleValue();
+
+            stock.epsTTM = o.isNull("epsInclExtraItemsTTM") ? null
+                    : o.getJsonNumber("epsInclExtraItemsTTM").doubleValue(); 
+
+            stock.epsGrowth5y = o.isNull("epsGrowth5Y") ? null : o.getJsonNumber("epsGrowth5Y").doubleValue(); 
+
+            stock.freeCashFlowTTM = o.isNull("freeCashFlowTTM") ? null
+                    : o.getJsonNumber("freeCashFlowTTM").doubleValue(); 
+
+            stock.longTermDebtEquityA = o.isNull("longTermDebt/equityAnnual") ? null
+                    : o.getJsonNumber("longTermDebt/equityAnnual").doubleValue();
+
+            stock.grossMarginTTM = o.isNull("grossMarginTTM") ? null : o.getJsonNumber("grossMarginTTM").doubleValue();
+
+            stock.netProfitMarginTTM = o.isNull("netProfitMarginTTM") ? null
+                    : o.getJsonNumber("netProfitMarginTTM").doubleValue();
+
+            stock.operMarginTTM = o.isNull("operatingMarginTTM") ? null
+                    : o.getJsonNumber("operatingMarginTTM").doubleValue();
+
+            stock.priceFCFTTM = o.isNull("pfcfShareTTM") ? null : o.getJsonNumber("pfcfShareTTM").doubleValue(); 
+            stock.peRatioTTM = o.isNull("peInclExtraTTM") ? null : o.getJsonNumber("peInclExtraTTM").doubleValue(); 
+            stock.psRatioTTM = o.isNull("psTTM") ? null : o.getJsonNumber("psTTM").doubleValue();
+            stock.roa = o.isNull("roaRfy") ? null : o.getJsonNumber("roaRfy").doubleValue(); 
+            stock.roe = o.isNull("roeRfy") ? null : o.getJsonNumber("roeRfy").doubleValue(); 
 
         } catch (Exception e) {
             // TODO: handle exception
