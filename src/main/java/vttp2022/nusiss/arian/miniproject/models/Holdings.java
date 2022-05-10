@@ -20,6 +20,9 @@ public class Holdings {
     private Timestamp createdAt;
     private Timestamp updatedAt;
     private String portfolioId;
+    private Double totalValue;
+    private Double profitLoss;
+    
 
     public Integer getId() {
         return id;
@@ -100,6 +103,23 @@ public class Holdings {
     public void setPercentageChange(Double percentageChange) {
         this.percentageChange = percentageChange;
     }
+    
+    public Double getTotalValue() {
+        return totalValue;
+    }
+
+    public void setTotalValue(Double totalValue) {
+        this.totalValue = totalValue;
+    }
+
+    public Double getProfitLoss() {
+        return profitLoss;
+    }
+
+    public void setProfitLoss(Double profitLoss) {
+        this.profitLoss = profitLoss;
+    }
+
 
     public static Holdings create(String json,String symbol){
         Holdings holding = new Holdings();

@@ -82,17 +82,7 @@
     </style>
   </head>
   <body>
-    <!-- <br />
-    <span> Auth User Id<code data-th-text="${authUser.userId}"></code></span>
-    <br />
-    <span>
-      Welcome (From Session User Object**)<code
-        data-th-text="${authUser.username}"
-      ></code
-    ></span>
-    <span>
-      Portfolio Id<code data-th-text="${authUser.portfolioId}"></code
-    ></span> -->
+
     <div id="highCharts">
       <div id="chartContainer"></div>
       <figure class="highcharts-figure">
@@ -113,6 +103,8 @@
           <th>Quantity</th>
           <th>Cost Basis</th>
           <th>Current Price</th>
+          <th>Profit/Loss($)</th>
+          <th>Total Value</th>
         </tr>
       </thead>
       <tbody>
@@ -121,6 +113,8 @@
           <td data-th-text="${holding.getQuantity}"></td>
           <td data-th-text="${holding.getCostBasis}"></td>
           <td data-th-text="${holding.getCurrentPrice}"></td>
+          <td data-th-text="${holding.getProfitLoss}"></td>
+          <td data-th-text="${holding.getTotalValue}"></td>
         </tr>
       </tbody>
     </table>

@@ -1,5 +1,7 @@
 package vttp2022.nusiss.arian.miniproject.controllers;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -21,11 +23,12 @@ import vttp2022.nusiss.arian.miniproject.models.Holdings;
 import vttp2022.nusiss.arian.miniproject.models.User;
 import vttp2022.nusiss.arian.miniproject.services.PortfolioService;
 
+
 @Controller
 @RequestMapping
 public class ProtectedController {
   
-    
+
     @Autowired
     private PortfolioService portSvc;
 
@@ -37,12 +40,18 @@ public class ProtectedController {
         User authUser = (User) sess.getAttribute("authUserSess");
         String portfolioId = authUser.getPortfolioId();
         List<Holdings> holdings = new LinkedList<>();
+
         try {
              holdings =  portSvc.findHoldingsByPortfolioId(portfolioId);
         } catch (PortfolioException e) {
             e.printStackTrace();
         }
-
+        for (Holdings holding : holdings) {
+            
+            holding.setProfitLoss((holding.getCurrentPrice()*holding.getQuantity() - holding.getCostBasis()* holding.getQuantity()));
+            holding.setTotalValue(holding.getCurrentPrice()*holding.getQuantity());
+        }
+        
         mvc.addObject("portfolioId", portfolioId);
         mvc.addObject("holdings", holdings);
         mvc.setStatus(HttpStatus.OK);
@@ -83,6 +92,8 @@ public class ProtectedController {
             Holdings latestHolding = optHolding.get();
             latestHolding.setQuantity(stock.getQuantity());
             latestHolding.setCostBasis(stock.getCostBasis());
+            latestHolding.setProfitLoss(stock.getCurrentPrice()*stock.getQuantity() - stock.getCostBasis()* stock.getQuantity());
+            latestHolding.setTotalValue(stock.getCurrentPrice()*stock.getQuantity());
             //update current price
             try {
                 portSvc.updateCurrPrice(stock.getSymbol(),latestHolding.getCurrentPrice());

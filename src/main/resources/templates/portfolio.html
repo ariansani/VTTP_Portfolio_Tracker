@@ -53,6 +53,8 @@
           <th>Quantity</th>
           <th>Cost Basis</th>
           <th>Current Price</th>
+          <th>Profit/Loss($)</th>
+          <th>Total Value</th>
         </tr>
       </thead>
       <tbody>
@@ -61,6 +63,8 @@
           <td data-th-text="${holding.getQuantity}"></td>
           <td data-th-text="${holding.getCostBasis}"></td>
           <td data-th-text="${holding.getCurrentPrice}"></td>
+          <td data-th-text="${holding.getProfitLoss}"></td>
+          <td data-th-text="${holding.getTotalValue}"></td>
         </tr>
       </tbody>
     </table>
@@ -189,7 +193,7 @@
 
             request.done(function (msg) {
               alert(msg.status);//true
-              
+
             });
 
             request.fail(function () {
