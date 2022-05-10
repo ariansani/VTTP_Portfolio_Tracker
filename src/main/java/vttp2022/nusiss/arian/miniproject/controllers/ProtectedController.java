@@ -43,7 +43,7 @@ public class ProtectedController {
             e.printStackTrace();
         }
 
-
+        mvc.addObject("portfolioId", portfolioId);
         mvc.addObject("holdings", holdings);
         mvc.setStatus(HttpStatus.OK);
         

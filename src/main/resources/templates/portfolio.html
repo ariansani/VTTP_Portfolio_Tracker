@@ -86,7 +86,7 @@
 <script th:inline="javascript">
   $(document).ready(function () {
     $("#portfolio").DataTable();
-
+    
     $("#addBtn").on("click", function () {
       (async () => {
         const { value: ticker } = await Swal.fire({
@@ -116,6 +116,7 @@
               searchStockAjax();
             }
           });
+          
 
           function searchStockAjax() {
             let request = $.ajax({
@@ -144,16 +145,20 @@
                     if (!document.getElementById('swal-input2').value) {
                       Swal.showValidationMessage('Please enter cost basis')   
                     } 
-                    
+                    let portfolioId =/*[[${portfolioId}]]*/ null;
                     return {
+                      "portfolioId": portfolioId,
+                      "symbol": tickerValid,
                     "quantity": document.getElementById("swal-input1").value,
                     "costBasis": document.getElementById("swal-input2").value,
+                    "currentPrice": msg
                     };
                   },
                 });
 
                 if (formValues) {
                   Swal.fire(JSON.stringify(formValues));
+                  addHoldingsToPortfolio(JSON.stringify(formValues));
 
                 }
               }
@@ -175,7 +180,25 @@
                 }
               });
             }); //end of request fail
+          }//end of searchStockAjax
+
+          function addHoldingsToPortfolio(jsonData){
+            let request = $.ajax({
+              type: "POST",
+              contentType: "application/json; charset=utf-8",
+              url: "/add",
+              data: jsonData,
+              dataType: "json",
+            });
+
+            request.done(function (msg) {});
+            
+            request.fail(function () {});
+
+
           }
+
+
         } //end of ticker
       })(); //end of async
     }); //end of addBtn click
