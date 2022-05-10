@@ -196,4 +196,13 @@ public class PortfolioService {
 
     }
 
+    public boolean addHoldingToPortfolio(Holdings holding) throws PortfolioException{
+      
+        boolean add = portfolioRepo.addHoldingToPortfolio(holding);
+        if (!add)
+            throw new PortfolioException("Cannot add %s. Please check with admin".formatted(holding.getSymbol()));
+
+        return add;
+    }
+
 }

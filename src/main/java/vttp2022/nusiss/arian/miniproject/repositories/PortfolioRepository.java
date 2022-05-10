@@ -63,6 +63,13 @@ public class PortfolioRepository {
         return count > 0;
     }
 
+    public boolean addHoldingToPortfolio(Holdings holding) {
+        int count = template.update(Queries.SQL_INSERT_NEW_HOLDING_TO_PORTFOLIO, holding.getPortfolioId(),holding.getSymbol(),holding.getQuantity(),holding.getCostBasis(),holding.getCurrentPrice(),holding.getIsActive());
+
+        return 1 == count;
+    }
+    
+
     
 
 

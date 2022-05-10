@@ -9,5 +9,6 @@ public interface Queries {
     public static final String SQL_FIND_PORTFOLIO_BY_USERID =  "SELECT * FROM portfolio WHERE user_id = ?";
     public static final String SQL_SELECT_HOLDINGS_BY_PORTFOLIO_ID = "SELECT * FROM holdings WHERE portfolio_id = ? AND is_active = ?";
     public static final String SQL_UPDATE_SYMBOLS_CURRENT_PRICE = "UPDATE holdings SET current_price = ? WHERE symbol = ? AND is_active = ?";
+    public static final String SQL_INSERT_NEW_HOLDING_TO_PORTFOLIO = "INSERT INTO holdings(portfolio_id, symbol, quantity, cost_basis, current_price, is_active) VALUES(?,?,?,?,?,?);";
 
 }

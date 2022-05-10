@@ -86,7 +86,7 @@
 <script th:inline="javascript">
   $(document).ready(function () {
     $("#portfolio").DataTable();
-    
+
     $("#addBtn").on("click", function () {
       (async () => {
         const { value: ticker } = await Swal.fire({
@@ -116,7 +116,6 @@
               searchStockAjax();
             }
           });
-          
 
           function searchStockAjax() {
             let request = $.ajax({
@@ -131,39 +130,36 @@
               (async () => {
                 addHoldingToPortfolio();
 
-                async function addHoldingToPortfolio(){
-                const { value: formValues } = await Swal.fire({
-                  title: `Current Price for ${tickerValid} : ${msg}`,
-                  html:
-                    'Quantity <input id="swal-input1"  type="number" class="swal2-input" required><br/>' +
-                    'Cost Basis <input id="swal-input2"  type="number" class="swal2-input" required>',
-                  focusConfirm: false,
-                  preConfirm: () => {
-                    if (!document.getElementById('swal-input1').value) {
-                      Swal.showValidationMessage('Please enter quantity')   
-                    } 
-                    if (!document.getElementById('swal-input2').value) {
-                      Swal.showValidationMessage('Please enter cost basis')   
-                    } 
-                    let portfolioId =/*[[${portfolioId}]]*/ null;
-                    return {
-                      "portfolioId": portfolioId,
-                      "symbol": tickerValid,
-                    "quantity": document.getElementById("swal-input1").value,
-                    "costBasis": document.getElementById("swal-input2").value,
-                    "currentPrice": msg
-                    };
-                  },
-                });
+                async function addHoldingToPortfolio() {
+                  const { value: formValues } = await Swal.fire({
+                    title: `Current Price for ${tickerValid} : ${msg}`,
+                    html:
+                      'Quantity <input id="swal-input1"  type="number" class="swal2-input" required><br/>' +
+                      'Cost Basis <input id="swal-input2"  type="number" class="swal2-input" required>',
+                    focusConfirm: false,
+                    preConfirm: () => {
+                      if (!document.getElementById("swal-input1").value) {
+                        Swal.showValidationMessage("Please enter quantity");
+                      }
+                      if (!document.getElementById("swal-input2").value) {
+                        Swal.showValidationMessage("Please enter cost basis");
+                      }
+                      let portfolioId = /*[[${portfolioId}]]*/ null;
+                      return {
+                        portfolioId: portfolioId,
+                        symbol: tickerValid,
+                        quantity: document.getElementById("swal-input1").value,
+                        costBasis: document.getElementById("swal-input2").value,
+                        currentPrice: msg,
+                      };
+                    },
+                  });
 
-                if (formValues) {
-                  Swal.fire(JSON.stringify(formValues));
-                  addHoldingsToPortfolio(JSON.stringify(formValues));
-
+                  if (formValues) {
+                    addHoldingsToPortfolio(JSON.stringify(formValues));
+                  }
                 }
-              }
               })();
-
             });
 
             request.fail(function () {
@@ -180,9 +176,9 @@
                 }
               });
             }); //end of request fail
-          }//end of searchStockAjax
+          } //end of searchStockAjax
 
-          function addHoldingsToPortfolio(jsonData){
+          function addHoldingsToPortfolio(jsonData) {
             let request = $.ajax({
               type: "POST",
               contentType: "application/json; charset=utf-8",
@@ -191,14 +187,15 @@
               dataType: "json",
             });
 
-            request.done(function (msg) {});
-            
-            request.fail(function () {});
+            request.done(function (msg) {
+              alert(msg.status);//true
+              
+            });
 
-
+            request.fail(function () {
+              alert("nola");
+            });
           }
-
-
         } //end of ticker
       })(); //end of async
     }); //end of addBtn click
