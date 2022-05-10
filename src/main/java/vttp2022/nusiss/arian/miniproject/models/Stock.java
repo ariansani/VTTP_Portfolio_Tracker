@@ -208,7 +208,9 @@ public class Stock {
             JsonReader r = Json.createReader(is);
             JsonObject jso = r.readObject();
             JsonObject o = jso.getJsonObject("metric");
-            System.out.println(o);
+            if (o.isEmpty()){
+                return null;
+            }
 
             stock.marketCap = o.isNull("marketCapitalization") ? null
                     : o.getJsonNumber("marketCapitalization").doubleValue();

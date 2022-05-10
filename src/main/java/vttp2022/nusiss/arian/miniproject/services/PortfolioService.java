@@ -142,15 +142,15 @@ public class PortfolioService {
             return Optional.empty();
         }
 
+
         try {
-            
+         
             Stock stock = Stock.create(resp.getBody(),symbol);
-        
-            return Optional.of(stock);
+            return stock == null ? Optional.empty(): Optional.of(stock);
         } catch (Exception e) {
             e.printStackTrace();
+            return Optional.empty();
         }
-        return Optional.empty();
 
     }
 
