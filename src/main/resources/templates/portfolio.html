@@ -128,25 +128,37 @@
 
             request.done(function (msg) {
               (async () => {
+                addHoldingToPortfolio();
+
+                async function addHoldingToPortfolio(){
                 const { value: formValues } = await Swal.fire({
                   title: `Current Price for ${tickerValid} : ${msg}`,
                   html:
-                    'Quantity <input id="swal-input1" type=number class="swal2-input"><br/>' +
-                    'Cost Basis <input id="swal-input2" type=number class="swal2-input">',
+                    'Quantity <input id="swal-input1"  type="number" class="swal2-input" required><br/>' +
+                    'Cost Basis <input id="swal-input2"  type="number" class="swal2-input" required>',
                   focusConfirm: false,
                   preConfirm: () => {
-                    return [
-                      document.getElementById("swal-input1").value,
-                      document.getElementById("swal-input2").value,
-                    ];
+                    if (!document.getElementById('swal-input1').value) {
+                      Swal.showValidationMessage('Please enter quantity')   
+                    } 
+                    if (!document.getElementById('swal-input2').value) {
+                      Swal.showValidationMessage('Please enter cost basis')   
+                    } 
+                    
+                    return {
+                    "quantity": document.getElementById("swal-input1").value,
+                    "costBasis": document.getElementById("swal-input2").value,
+                    };
                   },
                 });
 
                 if (formValues) {
                   Swal.fire(JSON.stringify(formValues));
+
                 }
+              }
               })();
-             
+
             });
 
             request.fail(function () {
