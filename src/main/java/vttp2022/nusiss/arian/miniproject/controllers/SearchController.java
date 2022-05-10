@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
+import vttp2022.nusiss.arian.miniproject.models.Holdings;
 import vttp2022.nusiss.arian.miniproject.models.Stock;
 import vttp2022.nusiss.arian.miniproject.services.PortfolioService;
 
@@ -27,17 +28,17 @@ public class SearchController {
     public ResponseEntity<String> getStockInfoViaAjax(
             @RequestBody String searchSymbol) {
                 
-        Stock stock = new Stock();
+        Holdings holding = new Holdings();
         try {
-            Optional<Stock> optStock = portSvc.retrieveStockByTicker(searchSymbol);
-            if (optStock.isEmpty()) {
+            Optional<Holdings> optHolding = portSvc.retrieveStockPriceByTicker(searchSymbol);
+            if (optHolding.isEmpty()) {
 
                 JsonObject errJson = Json.createObjectBuilder()
                         .add("message", "Cannot find : %s".formatted(searchSymbol)).build();
                 return ResponseEntity.status(400).body(errJson.toString());
 
             }
-            stock = optStock.get();
+            holding = optHolding.get();
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
@@ -49,7 +50,7 @@ public class SearchController {
        
         JsonObject response = Json.createObjectBuilder()
                     .add("message", "found it").build();
-        return ResponseEntity.ok("lol");
+        return ResponseEntity.ok(holding.getCurrentPrice().toString());
     }
 
 }

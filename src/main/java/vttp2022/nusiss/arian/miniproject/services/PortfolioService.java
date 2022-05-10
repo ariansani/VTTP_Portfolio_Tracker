@@ -72,7 +72,7 @@ public class PortfolioService {
 
         try {
             
-            Holdings holding = Holdings.create(resp.getBody(),symbol,holdingId);
+            Holdings holding = Holdings.updatePrice(resp.getBody(),symbol,holdingId);
             return Optional.of(holding);
         } catch (Exception e) {
             e.printStackTrace();
@@ -111,7 +111,7 @@ public class PortfolioService {
 
     }
 
-    public Optional<Stock> retrieveStockByTicker(String symbol){
+    public Optional<Stock> retrieveStockFinancialsByTicker(String symbol){
 
         String quoteUrl = UriComponentsBuilder.fromUriString(STOCK_URL)
         .queryParam("symbol", symbol)
@@ -151,6 +151,48 @@ public class PortfolioService {
             e.printStackTrace();
             return Optional.empty();
         }
+
+    }
+
+    public Optional<Holdings> retrieveStockPriceByTicker(String symbol){
+
+        String quoteUrl = UriComponentsBuilder.fromUriString(QUOTE_URL)
+        .queryParam("symbol", symbol)
+        .toUriString();
+
+         HttpHeaders headers = new HttpHeaders();
+         headers.add("X-Finnhub-Token", apiKey);
+
+         RequestEntity<Void> req = RequestEntity
+                .get(quoteUrl)
+                .headers(headers)
+                .accept(MediaType.APPLICATION_JSON)
+                .build();
+
+        RestTemplate template = new RestTemplate();
+
+        ResponseEntity<String> resp = null;
+
+        try {
+            resp = template.exchange(req, String.class);
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+
+        if (resp.getStatusCodeValue() >= 400) {
+            return Optional.empty();
+        }
+
+        try {
+            
+            Holdings holding = Holdings.create(resp.getBody(),symbol);
+            return Optional.of(holding);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Optional.empty();
+        
 
     }
 

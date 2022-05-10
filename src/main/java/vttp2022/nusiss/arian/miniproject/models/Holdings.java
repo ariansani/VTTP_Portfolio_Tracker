@@ -101,7 +101,29 @@ public class Holdings {
         this.percentageChange = percentageChange;
     }
 
-    public static Holdings create(String json,String symbol,Integer holdingId){
+    public static Holdings create(String json,String symbol){
+        Holdings holding = new Holdings();
+        holding.setSymbol(symbol);
+
+        try (InputStream is = new ByteArrayInputStream(json.getBytes())) {
+            
+            JsonReader r = Json.createReader(is);
+            JsonObject o = r.readObject();
+            Double floatVal =  o.getJsonNumber("c").doubleValue();
+            Double percentageChange =  o.getJsonNumber("dp").doubleValue();
+            holding.setCurrentPrice(floatVal);
+            holding.setPercentageChange(percentageChange);
+            
+
+        } catch (Exception e) {
+            //TODO: handle exception
+            e.printStackTrace();
+            return null;
+        }
+        return holding;
+    }
+
+    public static Holdings updatePrice(String json,String symbol,Integer holdingId){
         Holdings holding = new Holdings();
         holding.setSymbol(symbol);
         holding.setId(holdingId);
