@@ -68,6 +68,12 @@ public class PortfolioRepository {
 
         return 1 == count;
     }
+
+    public boolean editHolding(Holdings holding) {
+        int count = template.update(Queries.SQL_UPDATE_HOLDING, holding.getQuantity(),holding.getCostBasis(),holding.getId());
+
+        return 1 == count;
+    }
     
 
     

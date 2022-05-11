@@ -72,7 +72,7 @@
             <button
               type="button"
               class="btn btn-warning edit"
-              data-th-attr="id=${holding.getId}"
+              data-th-attr="id=${holding.getId},symbol=${holding.getSymbol},quantity=${holding.getQuantity},costbasis=${holding.getCostBasis}"
             >
               <i class="fa fa-light fa-pen-to-square"></i>
             </button>
@@ -111,16 +111,6 @@
 <script th:inline="javascript">
   $(document).ready(function () {
     $("#portfolio").DataTable();
-
-    $(".edit").on("click", function (event) {
-      alert(this.id);
-      alert("edit");
-    });
-
-    $(".delete").on("click", function (event) {
-      alert(this.id);
-      alert("delete");
-    });
 
     $("#addBtn").on("click", function () {
       (async () => {
@@ -191,7 +181,7 @@
                   });
 
                   if (formValues) {
-                    addHoldingsToPortfolio(JSON.stringify(formValues));
+                    addHoldingsToPortfolioAjax(JSON.stringify(formValues));
                   }
                 }
               })();
@@ -213,7 +203,7 @@
             }); //end of request fail
           } //end of searchStockAjax
 
-          function addHoldingsToPortfolio(jsonData) {
+          function addHoldingsToPortfolioAjax(jsonData) {
             let request = $.ajax({
               type: "POST",
               contentType: "application/json; charset=utf-8",
@@ -223,15 +213,153 @@
             });
 
             request.done(function (msg) {
-              alert(msg.status); //true
+              const Toast = Swal.mixin({
+                toast: true,
+                position: "middle",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.addEventListener("mouseenter", Swal.stopTimer);
+                  toast.addEventListener("mouseleave", Swal.resumeTimer);
+                },
+              });
+
+              Toast.fire({
+                icon: "success",
+                title: `Added ${tickerValid}.`,
+                text: "Updating your portfolio...",
+              }).then((result) => {
+                if (result.dismiss === Swal.DismissReason.timer) {
+                  //refresh page
+                  location.reload();
+                }
+              });
             });
 
             request.fail(function () {
-              alert("nola");
+              const Toast = Swal.mixin({
+                toast: true,
+                position: "middle",
+                showConfirmButton: false,
+                timer: 4000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.addEventListener("mouseenter", Swal.stopTimer);
+                  toast.addEventListener("mouseleave", Swal.resumeTimer);
+                },
+              });
+
+              Toast.fire({
+                icon: "error",
+                title: "An error occured while adding. Please try again.",
+              });
             });
           }
         } //end of ticker
       })(); //end of async
     }); //end of addBtn click
+
+    $(".edit").on("click", function (event) {
+      let id = $(this).attr("id");
+      let costbasis = $(this).attr("costbasis");
+      let quantity = $(this).attr("quantity");
+      let symbol = $(this).attr("symbol");
+
+      (async () => {
+        const { value: formValues } = await Swal.fire({
+          title: `Updating your ${symbol} position`,
+          html:
+            `Quantity <input id="swal-input3" value=${quantity} type="number" class="swal2-input" required><br/>` +
+            `Cost Basis <input id="swal-input4" value=${costbasis} type="number" class="swal2-input" required>`,
+          focusConfirm: false,
+          preConfirm: () => {
+            if (!document.getElementById("swal-input3").value) {
+              Swal.showValidationMessage("Please enter quantity");
+            }
+            if (!document.getElementById("swal-input4").value) {
+              Swal.showValidationMessage("Please enter cost basis");
+            }
+            return {
+              holdingId: id,
+              symbol: symbol,
+              quantity: document.getElementById("swal-input3").value,
+              costBasis: document.getElementById("swal-input4").value,
+            };
+          },
+        });
+
+        if (formValues) {
+          editHoldingsInPortfolioAjax(JSON.stringify(formValues));
+
+        }
+
+        function editHoldingsInPortfolioAjax(jsonData) {
+            let request = $.ajax({
+              type: "PUT",
+              contentType: "application/json; charset=utf-8",
+              url: "/edit",
+              data: jsonData,
+              dataType: "json",
+            });
+
+            request.done(function (msg) {
+              const Toast = Swal.mixin({
+                toast: true,
+                position: "middle",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.addEventListener("mouseenter", Swal.stopTimer);
+                  toast.addEventListener("mouseleave", Swal.resumeTimer);
+                },
+              });
+
+              Toast.fire({
+                icon: "success",
+                title: `Made changes to ${symbol}.`,
+                text: "Updating your portfolio...",
+              }).then((result) => {
+                if (result.dismiss === Swal.DismissReason.timer) {
+                  //refresh page
+                  location.reload();
+                }
+              });
+            });
+
+            request.fail(function () {
+              const Toast = Swal.mixin({
+                toast: true,
+                position: "middle",
+                showConfirmButton: false,
+                timer: 4000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.addEventListener("mouseenter", Swal.stopTimer);
+                  toast.addEventListener("mouseleave", Swal.resumeTimer);
+                },
+              });
+
+              Toast.fire({
+                icon: "error",
+                title: "An error occured while editing. Please try again.",
+              });
+            });
+          }
+
+      })();
+    });//end of edit btn
+
+
+
+
+    $(".delete").on("click", function (event) {
+      let id = $(this).attr("id");
+    });
+
+
+
+
   }); //end of document ready
 </script>

@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -92,6 +93,49 @@ public class PortfolioRestController {
 
             responseJson = Json.createObjectBuilder()
                     .add("status", addedSuccessfully)
+                    .build();
+
+        } catch (Exception e) {
+            // TODO: handle exception
+            JsonObject errJson = Json.createObjectBuilder()
+                    .add("error", e.getMessage()).build();
+            return ResponseEntity.status(400).body(errJson.toString());
+        }
+
+        return ResponseEntity.ok(responseJson.toString());
+    }
+
+
+    @PutMapping(path = "/edit", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> editHolding(
+            @RequestBody String payload) {
+
+        JsonObject responseJson;
+        try (InputStream is = new ByteArrayInputStream(payload.getBytes(StandardCharsets.UTF_8))) {
+            JsonReader reader = Json.createReader(is);
+            JsonObject o = reader.readObject();
+            
+            //let Java handle the type safety instead of parsing datatypes in Javascript
+            Holdings holding = new Holdings();
+            holding.setId(Integer.valueOf(o.getString("holdingId")));
+            holding.setQuantity(Integer.valueOf(o.getString("quantity")));
+            holding.setSymbol(o.getString("symbol"));
+            holding.setCostBasis(Float.valueOf(o.getString("costBasis")));
+
+            
+            boolean editSuccess;
+            try {
+                editSuccess=portSvc.editHolding(holding);
+            } catch (PortfolioException e) {
+                //TODO: handle exception
+                JsonObject errJson = Json.createObjectBuilder()
+                .add("error", e.getMessage()).build();
+                return ResponseEntity.status(400).body(errJson.toString());
+            }
+
+
+            responseJson = Json.createObjectBuilder()
+                    .add("status", editSuccess)
                     .build();
 
         } catch (Exception e) {

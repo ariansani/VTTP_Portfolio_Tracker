@@ -205,4 +205,13 @@ public class PortfolioService {
         return add;
     }
 
+
+    public boolean editHolding(Holdings holding) throws PortfolioException{
+        boolean edit = portfolioRepo.editHolding(holding);
+        if (!edit)
+            throw new PortfolioException("Cannot edit %s. Please check with admin".formatted(holding.getSymbol()));
+
+        return edit;
+    }
+
 }
