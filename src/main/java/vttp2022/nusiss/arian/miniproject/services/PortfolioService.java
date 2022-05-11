@@ -214,4 +214,13 @@ public class PortfolioService {
         return edit;
     }
 
+
+    public boolean deactivateHolding(Holdings holding) throws PortfolioException{
+        boolean deactivate = portfolioRepo.deactivateHolding(holding);
+        if (!deactivate)
+            throw new PortfolioException("Cannot deactivate %s. Please check with admin".formatted(holding.getSymbol()));
+
+        return deactivate;
+    }
+
 }

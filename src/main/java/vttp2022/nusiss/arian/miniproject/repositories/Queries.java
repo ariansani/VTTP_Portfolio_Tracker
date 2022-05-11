@@ -13,5 +13,6 @@ public interface Queries {
     public static final String SQL_UPDATE_SYMBOLS_CURRENT_PRICE = "UPDATE holdings SET current_price = ? WHERE symbol = ? AND is_active = ?";
     public static final String SQL_INSERT_NEW_HOLDING_TO_PORTFOLIO = "INSERT INTO holdings(portfolio_id, symbol, quantity, cost_basis, current_price, is_active) VALUES(?,?,?,?,?,?);";
     public static final String SQL_UPDATE_HOLDING = "UPDATE holdings SET quantity= ?, cost_basis=?, updated_at=current_timestamp() WHERE holding_id=?";
+    public static final String SQL_SOFT_DELETE_HOLDING = "UPDATE holdings SET is_active= ?,  updated_at=current_timestamp() WHERE holding_id=?";
 
 }

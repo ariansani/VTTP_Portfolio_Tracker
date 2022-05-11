@@ -147,4 +147,44 @@ public class PortfolioRestController {
 
         return ResponseEntity.ok(responseJson.toString());
     }
+
+    @PutMapping(path = "/softdelete", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> deactivateHolding(
+            @RequestBody String payload) {
+
+        JsonObject responseJson;
+        try (InputStream is = new ByteArrayInputStream(payload.getBytes(StandardCharsets.UTF_8))) {
+            JsonReader reader = Json.createReader(is);
+            JsonObject o = reader.readObject();
+            
+            //let Java handle the type safety instead of parsing datatypes in Javascript
+            Holdings holding = new Holdings();
+            holding.setId(Integer.valueOf(o.getString("holdingId")));
+            holding.setSymbol(o.getString("symbol"));
+
+            
+            boolean deactivateSuccess;
+            try {
+                deactivateSuccess=portSvc.deactivateHolding(holding);
+            } catch (PortfolioException e) {
+                //TODO: handle exception
+                JsonObject errJson = Json.createObjectBuilder()
+                .add("error", e.getMessage()).build();
+                return ResponseEntity.status(400).body(errJson.toString());
+            }
+
+
+            responseJson = Json.createObjectBuilder()
+                    .add("status", deactivateSuccess)
+                    .build();
+
+        } catch (Exception e) {
+            // TODO: handle exception
+            JsonObject errJson = Json.createObjectBuilder()
+                    .add("error", e.getMessage()).build();
+            return ResponseEntity.status(400).body(errJson.toString());
+        }
+
+        return ResponseEntity.ok(responseJson.toString());
+    }
 }

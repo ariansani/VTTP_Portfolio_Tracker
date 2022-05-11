@@ -81,7 +81,7 @@
             <button
               type="button"
               class="btn btn-danger delete"
-              data-th-attr="id=${holding.getId}"
+              data-th-attr="id=${holding.getId},symbol=${holding.getSymbol},quantity=${holding.getQuantity},costbasis=${holding.getCostBasis}"
             >
               <i class="fa fa-light fa-trash-can"></i>
             </button>
@@ -348,7 +348,7 @@
             });
           }
 
-      })();
+      })();//end of async
     });//end of edit btn
 
 
@@ -356,6 +356,89 @@
 
     $(".delete").on("click", function (event) {
       let id = $(this).attr("id");
+      let costbasis = $(this).attr("costbasis");
+      let quantity = $(this).attr("quantity");
+      let symbol = $(this).attr("symbol");
+
+
+      (async () => {
+        const { value: formValues } = await Swal.fire({
+          title: `Deleting your ${symbol} position`,
+          html:
+            `Quantity <code>${quantity}</code><br/>` +
+            `Cost Basis <code>${costbasis}</code>`,
+          confirmButtonText:"Delete",
+          confirmButtonColor:"#c71919",
+          footer: "Once deleted... we can still retrieve it for you (Contact SRE)",
+          preConfirm: () => {
+            
+            return {
+              holdingId: id,
+              symbol: symbol
+            };
+          },
+        });
+
+        if (formValues) {
+         deleteHoldingsInPortfolioAjax(JSON.stringify(formValues));
+
+        }
+
+        function deleteHoldingsInPortfolioAjax(jsonData) {
+            let request = $.ajax({
+              type: "PUT",
+              contentType: "application/json; charset=utf-8",
+              url: "/softdelete",
+              data: jsonData,
+              dataType: "json",
+            });
+
+            request.done(function (msg) {
+              const Toast = Swal.mixin({
+                toast: true,
+                position: "middle",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.addEventListener("mouseenter", Swal.stopTimer);
+                  toast.addEventListener("mouseleave", Swal.resumeTimer);
+                },
+              });
+
+              Toast.fire({
+                icon: "success",
+                title: `Removed ${symbol} position.`,
+                text: "Updating your portfolio...",
+              }).then((result) => {
+                if (result.dismiss === Swal.DismissReason.timer) {
+                  //refresh page
+                  location.reload();
+                }
+              });
+            });
+
+            request.fail(function () {
+              const Toast = Swal.mixin({
+                toast: true,
+                position: "middle",
+                showConfirmButton: false,
+                timer: 4000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.addEventListener("mouseenter", Swal.stopTimer);
+                  toast.addEventListener("mouseleave", Swal.resumeTimer);
+                },
+              });
+
+              Toast.fire({
+                icon: "error",
+                title: "An error occured while deleting. Please try again.",
+              });
+            });
+          }
+
+      })();//end of async
     });
 
 

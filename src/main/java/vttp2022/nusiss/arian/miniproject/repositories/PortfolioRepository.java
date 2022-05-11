@@ -74,6 +74,12 @@ public class PortfolioRepository {
 
         return 1 == count;
     }
+
+    public boolean deactivateHolding(Holdings holding) {
+        int count = template.update(Queries.SQL_SOFT_DELETE_HOLDING,false,holding.getId());
+
+        return 1 == count;
+    }
     
 
     
