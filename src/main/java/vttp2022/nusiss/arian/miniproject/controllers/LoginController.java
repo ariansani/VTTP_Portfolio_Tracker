@@ -149,6 +149,13 @@ public class LoginController {
 
     }
 
+    // @GetMapping(path = "/search")
+    // public ModelAndView search(HttpSession sess) {
+
+    //     return new ModelAndView("redirect:/protected/search");
+
+    // }
+
     private User create(MultiValueMap<String, String> form) {
 
         User user = new User();

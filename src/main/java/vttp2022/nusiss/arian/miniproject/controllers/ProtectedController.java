@@ -21,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import vttp2022.nusiss.arian.miniproject.exceptions.PortfolioException;
 import vttp2022.nusiss.arian.miniproject.models.Holdings;
+import vttp2022.nusiss.arian.miniproject.models.Stock;
 import vttp2022.nusiss.arian.miniproject.models.User;
 import vttp2022.nusiss.arian.miniproject.services.PortfolioService;
 
@@ -74,7 +75,6 @@ public class ProtectedController {
         ModelAndView mvc = new ModelAndView();
         mvc.setViewName(view);
 
-        // String username = sess.getAttribute("username").toString();
         User authUser = (User) sess.getAttribute("authUserSess");
         String portfolioId = authUser.getPortfolioId();
         List<Holdings> holdings = new LinkedList<>();
@@ -123,6 +123,40 @@ public class ProtectedController {
         mvc.addObject("treeMapData", updatedPriceAndPercentage);
         mvc.addObject("portfolioId", portfolioId);
         mvc.addObject("authUser", authUser);
+        mvc.setStatus(HttpStatus.OK);
+
+        return mvc;
+
+    }
+
+    @GetMapping(path = "/protected/search")
+    public ModelAndView searchStockFinancials(@RequestParam (name="stock") String symbol) {
+
+        ModelAndView mvc = new ModelAndView();
+        mvc.setViewName("stockinfo");
+       
+        Stock stock = new Stock();
+        try {
+            Optional<Stock> optStock = portSvc.retrieveStockFinancialsByTicker(symbol);
+
+            if (optStock.isEmpty()) {
+                mvc.setStatus(HttpStatus.BAD_REQUEST);
+                mvc.setViewName("error");
+                return mvc;
+            }
+
+            stock = optStock.get();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            mvc.addObject("errorMessage", "Stock not found");
+            mvc.setStatus(HttpStatus.BAD_REQUEST);
+            mvc.setViewName("error");
+            return mvc;
+        }
+        
+       
+        mvc.addObject("stock", stock);
         mvc.setStatus(HttpStatus.OK);
 
         return mvc;

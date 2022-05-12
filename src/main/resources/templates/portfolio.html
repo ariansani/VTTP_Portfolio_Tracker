@@ -56,6 +56,7 @@
           <th>Current Price</th>
           <th>Profit/Loss($)</th>
           <th>Total Value</th>
+          <th>Financials</th>
           <th>Edit</th>
           <th>Delete</th>
         </tr>
@@ -69,12 +70,25 @@
           <td data-th-text="${#numbers.formatDecimal(holding.getProfitLoss,1,2,'POINT')}"></td>
           <td data-th-text="${#numbers.formatDecimal(holding.getTotalValue,1,2,'POINT')}"></td>
           <td>
+            <form method="GET" action="/protected/search" target="_blank">
+            <button
+            type="submit"
+            class="btn btn-secondary"
+            data-th-value="${holding.getSymbol}"
+            name="stock"
+            >
+            
+          </i><i class="fa fa-duotone fa-eye"></i>
+          </button>
+        </form>
+          </td>
+          <td>
             <button
               type="button"
               class="btn btn-warning edit"
               data-th-attr="id=${holding.getId},symbol=${holding.getSymbol},quantity=${holding.getQuantity},costbasis=${holding.getCostBasis}"
             >
-              <i class="fa fa-light fa-pen-to-square"></i>
+              <i class="fa fa-duotone fa-pen-to-square"></i>
             </button>
           </td>
           <td>
@@ -83,7 +97,7 @@
               class="btn btn-danger delete"
               data-th-attr="id=${holding.getId},symbol=${holding.getSymbol},quantity=${holding.getQuantity},costbasis=${holding.getCostBasis}"
             >
-              <i class="fa fa-light fa-trash-can"></i>
+              <i class="fa fa-duotone fa-trash-can"></i>
             </button>
           </td>
         </tr>

@@ -136,6 +136,7 @@ public class PortfolioService {
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
+            
         }
 
         if (resp.getStatusCodeValue() >= 400) {
@@ -146,6 +147,7 @@ public class PortfolioService {
         try {
          
             Stock stock = Stock.create(resp.getBody(),symbol);
+            
             return stock == null ? Optional.empty(): Optional.of(stock);
         } catch (Exception e) {
             e.printStackTrace();

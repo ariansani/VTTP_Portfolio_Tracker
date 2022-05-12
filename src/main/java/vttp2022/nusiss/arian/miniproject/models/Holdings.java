@@ -152,8 +152,8 @@ public class Holdings {
             
             JsonReader r = Json.createReader(is);
             JsonObject o = r.readObject();
-            Double floatVal =  o.getJsonNumber("c").doubleValue();
-            Double percentageChange =  o.getJsonNumber("dp").doubleValue();
+            Double floatVal =  o.isNull("c") ? null: o.getJsonNumber("c").doubleValue();
+            Double percentageChange =  o.isNull("dp") ? null : o.getJsonNumber("dp").doubleValue();
             holding.setCurrentPrice(floatVal);
             holding.setPercentageChange(percentageChange);
             
