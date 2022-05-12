@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +40,7 @@ public class PortfolioRestController {
             if (optHolding.isEmpty()) {
 
                 JsonObject errJson = Json.createObjectBuilder()
-                        .add("message", "Cannot find : %s".formatted(searchSymbol)).build();
+                        .add("errorMessage", "Cannot find : %s".formatted(searchSymbol)).build();
                 return ResponseEntity.status(400).body(errJson.toString());
 
             }
@@ -50,7 +49,7 @@ public class PortfolioRestController {
             // TODO: handle exception
             e.printStackTrace();
             JsonObject errJson = Json.createObjectBuilder()
-                    .add("message", "Cannot find : %s".formatted(searchSymbol)).build();
+                    .add("errorMessage", "Cannot find : %s".formatted(searchSymbol)).build();
             return ResponseEntity.status(400).body(errJson.toString());
         }
 
@@ -86,7 +85,7 @@ public class PortfolioRestController {
             } catch (PortfolioException e) {
                 //TODO: handle exception
                 JsonObject errJson = Json.createObjectBuilder()
-                .add("error", e.getMessage()).build();
+                .add("errorMessage",e.getReason()).build();
                 return ResponseEntity.status(400).body(errJson.toString());
             }
 
@@ -98,7 +97,7 @@ public class PortfolioRestController {
         } catch (Exception e) {
             // TODO: handle exception
             JsonObject errJson = Json.createObjectBuilder()
-                    .add("error", e.getMessage()).build();
+                    .add("errorMessage", e.getMessage()).build();
             return ResponseEntity.status(400).body(errJson.toString());
         }
 
@@ -129,7 +128,7 @@ public class PortfolioRestController {
             } catch (PortfolioException e) {
                 //TODO: handle exception
                 JsonObject errJson = Json.createObjectBuilder()
-                .add("error", e.getMessage()).build();
+                .add("errorMessage", e.getReason()).build();
                 return ResponseEntity.status(400).body(errJson.toString());
             }
 
@@ -141,7 +140,7 @@ public class PortfolioRestController {
         } catch (Exception e) {
             // TODO: handle exception
             JsonObject errJson = Json.createObjectBuilder()
-                    .add("error", e.getMessage()).build();
+                    .add("errorMessage", e.getMessage()).build();
             return ResponseEntity.status(400).body(errJson.toString());
         }
 
@@ -169,7 +168,7 @@ public class PortfolioRestController {
             } catch (PortfolioException e) {
                 //TODO: handle exception
                 JsonObject errJson = Json.createObjectBuilder()
-                .add("error", e.getMessage()).build();
+                .add("errorMessage", e.getReason()).build();
                 return ResponseEntity.status(400).body(errJson.toString());
             }
 
@@ -181,7 +180,7 @@ public class PortfolioRestController {
         } catch (Exception e) {
             // TODO: handle exception
             JsonObject errJson = Json.createObjectBuilder()
-                    .add("error", e.getMessage()).build();
+                    .add("errorMessage", e.getMessage()).build();
             return ResponseEntity.status(400).body(errJson.toString());
         }
 

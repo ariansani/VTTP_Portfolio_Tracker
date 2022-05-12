@@ -64,10 +64,10 @@
         <tr data-th-each="holding : ${holdings}">
           <td data-th-text="${holding.getSymbol}"></td>
           <td data-th-text="${holding.getQuantity}"></td>
-          <td data-th-text="${holding.getCostBasis}"></td>
-          <td data-th-text="${holding.getCurrentPrice}"></td>
-          <td data-th-text="${holding.getProfitLoss}"></td>
-          <td data-th-text="${holding.getTotalValue}"></td>
+          <td data-th-text="${#numbers.formatDecimal(holding.getCostBasis,1,2,'POINT')}"></td>
+          <td data-th-text="${#numbers.formatDecimal(holding.getCurrentPrice,1,2,'POINT')}"></td>
+          <td data-th-text="${#numbers.formatDecimal(holding.getProfitLoss,1,2,'POINT')}"></td>
+          <td data-th-text="${#numbers.formatDecimal(holding.getTotalValue,1,2,'POINT')}"></td>
           <td>
             <button
               type="button"

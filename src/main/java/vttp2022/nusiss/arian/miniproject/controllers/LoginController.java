@@ -68,6 +68,10 @@ public class LoginController {
         } catch (PortfolioException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+            mvc.addObject("errorMessage", e.getReason());
+            mvc.setStatus(HttpStatus.UNAUTHORIZED);
+            mvc.setViewName("error");
+            return mvc;
         }
 
         authUser.setPortfolioId(portfolioId);
@@ -100,6 +104,10 @@ public class LoginController {
         } catch (UserException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+            mvc.addObject("errorMessage", e.getReason());
+            mvc.setStatus(HttpStatus.UNAUTHORIZED);
+            mvc.setViewName("error");
+            return mvc;
         }
 
         User authUser = loginSvc.authenticate(optUser);
@@ -117,6 +125,10 @@ public class LoginController {
         } catch (PortfolioException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+            mvc.addObject("errorMessage", e.getReason());
+            mvc.setStatus(HttpStatus.UNAUTHORIZED);
+            mvc.setViewName("error");
+            return mvc;
         }
 
         authUser.setPortfolioId(portfolioId);
