@@ -33,11 +33,15 @@
         transition: 0.1s filter;
         filter: blur(10px);
       }
+      div#portfolio_wrapper {
+    padding-left: 10%;
+    padding-right: 10%;
+      }
     </style>
   </head>
   <body>
     <div style="clear: both; text-align: center">
-      <h3 style="display: inline-block; margin: auto">Portfolio Holdings</h3>
+      <h3 style="display: inline-block; margin: auto">Portfolio Holdings<span data-th-text="${#numbers.formatDecimal(aum,1,2,'POINT')}"></span></h3>
       <button
         class="btn btn-lg btn-success"
         aria-label="Enter a ticker symbol"
@@ -67,7 +71,7 @@
           <td data-th-text="${holding.getQuantity}"></td>
           <td data-th-text="${#numbers.formatDecimal(holding.getCostBasis,1,2,'POINT')}"></td>
           <td data-th-text="${#numbers.formatDecimal(holding.getCurrentPrice,1,2,'POINT')}"></td>
-          <td data-th-text="${#numbers.formatDecimal(holding.getProfitLoss,1,2,'POINT')}"></td>
+          <td data-th-style="${#numbers.formatDecimal(holding.getProfitLoss,1,2,'POINT')} <=0 ? 'color:red;' : 'color:green;'" data-th-text="${#numbers.formatDecimal(holding.getProfitLoss,1,2,'POINT')}"></td>
           <td data-th-text="${#numbers.formatDecimal(holding.getTotalValue,1,2,'POINT')}"></td>
           <td>
             <form method="GET" action="/protected/search" target="_blank">

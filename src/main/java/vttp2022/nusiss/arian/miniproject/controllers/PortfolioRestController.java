@@ -8,7 +8,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +20,7 @@ import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
 import vttp2022.nusiss.arian.miniproject.exceptions.PortfolioException;
 import vttp2022.nusiss.arian.miniproject.models.Holdings;
-import vttp2022.nusiss.arian.miniproject.models.Stock;
+
 import vttp2022.nusiss.arian.miniproject.services.PortfolioService;
 
 @RestController
