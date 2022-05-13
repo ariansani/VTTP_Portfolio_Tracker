@@ -104,15 +104,32 @@
   </ul>
   </div>
 
-  <div class="p-1 my-container active-cont">
-    <a class="btn border-0" id="menu-btn">
-      <i class="fa fa-light fa-bars"></i><p>Menu</p>
+  <div class="my-container active-cont">
+    <a class="btn border-0 ms-2 mt-2" id="menu-btn">
+      <i class="fa fa-light fa-bars"></i>
     </a>
-
+    <nav class="navbar navbar-light bg-light">
+      <div class="container-fluid">
+        <span class="navbar-brand mb-0 h1 offset-md-3">
+            Assets Under Mgmt:
+            <code>$<span
+              data-th-text="${#numbers.formatDecimal(aum,1,2,'POINT')}"
+            ></span
+          ></code>
+            <span style="margin-left:3em"></span>
+            Profit/Loss:
+            <code>$<span
+              data-th-text="${#numbers.formatDecimal(profitLoss,1,2,'POINT')}"
+            ></span
+          ></code>
+        </span>
+      </div>
+    </nav>
     <div class="mainContent">
 
     <div style="clear: both; text-align: center">
-      <h3 style="display: inline-block; margin: auto">Portfolio Holdings<span data-th-text="${#numbers.formatDecimal(aum,1,2,'POINT')}"></span></h3>
+      <h3 style="display: inline-block; margin: auto">Portfolio Holdings
+       </h3>
       <button
         class="btn btn-lg btn-success"
         aria-label="Enter a ticker symbol"

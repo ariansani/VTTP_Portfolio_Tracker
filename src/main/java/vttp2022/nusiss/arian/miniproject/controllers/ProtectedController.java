@@ -52,6 +52,7 @@ public class ProtectedController {
         }
 
         Double assetsUnderMgmt = 0.0d;
+        Double profitLoss = 0.0d;
 
         for (Holdings holding : holdings) {
 
@@ -61,9 +62,11 @@ public class ProtectedController {
 
             holding.setTotalValue(holding.getCurrentPrice() * holding.getQuantity());
             assetsUnderMgmt += holding.getTotalValue();
+            profitLoss += holding.getProfitLoss();
         }
 
         mvc.addObject("aum", assetsUnderMgmt);
+        mvc.addObject("profitLoss", profitLoss);
         mvc.addObject("portfolioId", portfolioId);
         mvc.addObject("holdings", holdings);
         mvc.setStatus(HttpStatus.OK);
@@ -94,6 +97,7 @@ public class ProtectedController {
 
         List<Holdings> updatedPriceAndPercentage = new LinkedList<>();
         Double assetsUnderMgmt = 0.0d;
+        Double profitLoss = 0.0d;
         for (Holdings stock : holdings) {
             Optional<Holdings> optHolding = portSvc.retrieveHolding(stock.getSymbol(), stock.getId());
 
@@ -108,6 +112,7 @@ public class ProtectedController {
             latestHolding.setProfitLoss(stock.getCurrentPrice() * stock.getQuantity() - stock.getCostBasis() * stock.getQuantity());
             latestHolding.setTotalValue(stock.getCurrentPrice() * stock.getQuantity());
             assetsUnderMgmt+=latestHolding.getTotalValue();
+            profitLoss+=latestHolding.getProfitLoss();
             // update current price
             try {
                 portSvc.updateCurrPrice(stock.getSymbol(), latestHolding.getCurrentPrice());
@@ -122,7 +127,7 @@ public class ProtectedController {
             updatedPriceAndPercentage.add(latestHolding);
 
         }
-
+        mvc.addObject("profitLoss", profitLoss);
         mvc.addObject("aum", assetsUnderMgmt);
         mvc.addObject("holdings", updatedPriceAndPercentage);
         mvc.addObject("treeMapData", updatedPriceAndPercentage);
