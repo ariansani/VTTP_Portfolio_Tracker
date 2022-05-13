@@ -26,8 +26,8 @@
     />
 
     <style>
-      body {
-        margin: 4em;
+      .mainContent {
+        margin: 2em;
       }
       body.swal2-shown > [aria-hidden="true"] {
         transition: 0.1s filter;
@@ -37,9 +37,79 @@
     padding-left: 10%;
     padding-right: 10%;
       }
+
+      
+      /* nav styling */
+      .side-navbar {
+        width: 264px;
+        height: 100%;
+        position: fixed;
+        margin-left: -440px;
+        background-color: #323284;
+        transition: 0.5s;
+      }
+      .nav-link:active,
+      .nav-link:focus,
+      .nav-link:hover {
+        background-color: #ffffff26;
+        font-weight: 700;
+        color:white;
+      }
+      .my-container {
+        transition: 0.4s;
+      }
+      .active-nav {
+        margin-left: 0;
+      }
+      /* for main section */
+      .active-cont {
+        margin-left: 264px;
+      }
+      #menu-btn {
+        background-color: #7c788b;
+        color: #fff;
+        z-index: 10;
+      }
+      li.nav-link {
+        color: white;
+        font-weight: 300;
+        font-size:large;
+        text-decoration: none;
+      }
+      p{
+        margin-bottom:0;
+      }
+      a {
+      text-decoration: none !important;
+      }
     </style>
   </head>
   <body>
+    <div
+    class="side-navbar active-nav d-flex justify-content-between flex-wrap flex-column"
+    id="sidebar"
+  >
+  <ul class="nav flex-column text-white w-100">
+    <a href="#" class="nav-link h3 text-white my-2"> Portfolio Tracker </a>
+    <a href="/protected/dashboard"><li class="nav-link">
+      <span class="mx-2"><i class="fa fa-xl fa-duotone fa-cubes-stacked"></i> Dashboard</span>
+    </li></a>
+    <a href="/protected/manage/portfolio"><li class="nav-link">
+      <span class="mx-2"><i class="fa fa-xl fa-duotone fa-people-roof"></i> Manage Portfolio</span>
+    </li></a>
+    <a href="/logout"><li class="nav-link">
+      <span class="mx-2"><i class="fa fa-xl fa-duotone fa-door-open"></i> Logout</span>
+    </li></a>
+  </ul>
+  </div>
+
+  <div class="p-1 my-container active-cont">
+    <a class="btn border-0" id="menu-btn">
+      <i class="fa fa-light fa-bars"></i><p>Menu</p>
+    </a>
+
+    <div class="mainContent">
+
     <div style="clear: both; text-align: center">
       <h3 style="display: inline-block; margin: auto">Portfolio Holdings<span data-th-text="${#numbers.formatDecimal(aum,1,2,'POINT')}"></span></h3>
       <button
@@ -108,9 +178,7 @@
       </tbody>
     </table>
 
-    <form action="/logout" method="get">
-      <button class="btn btn-lg btn-danger" type="submit">Logout</button>
-    </form>
+  </div>
   </body>
 </html>
 
@@ -128,6 +196,16 @@
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script th:inline="javascript">
   $(document).ready(function () {
+    var menu_btn = document.querySelector("#menu-btn");
+    var sidebar = document.querySelector("#sidebar");
+    var container = document.querySelector(".my-container");
+    menu_btn.addEventListener("click", () => {
+      sidebar.classList.toggle("active-nav");
+      container.classList.toggle("active-cont");
+    });
+
+
+
     $("#portfolio").DataTable();
 
     $("#addBtn").on("click", function () {
