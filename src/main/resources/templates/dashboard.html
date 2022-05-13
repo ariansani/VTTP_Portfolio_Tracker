@@ -29,6 +29,12 @@
         margin: 2em;
       }
 
+      body.swal2-shown > [aria-hidden="true"] {
+        transition: 0.1s filter;
+        filter: blur(10px);
+      }
+         
+
       .highcharts-figure,
       .highcharts-data-table table {
         min-width: 32%;
@@ -160,21 +166,23 @@
       </ul>
     </div>
 
-    <div class=" my-container active-cont">
+    <div class="my-container active-cont">
       <a class="btn border-0 ms-2 mt-2" id="menu-btn">
         <i class="fa fa-light fa-bars"></i>
       </a>
       <nav class="navbar navbar-light bg-light">
         <div class="container-fluid">
           <span class="navbar-brand mb-0 h1 offset-md-3">
-              Assets Under Mgmt:
-              <code>$<span
+            Assets Under Mgmt:
+            <code
+              >$<span
                 data-th-text="${#numbers.formatDecimal(aum,1,2,'POINT')}"
               ></span
             ></code>
-              <span style="margin-left:3em"></span>
-              Profit/Loss:
-              <code>$<span
+            <span style="margin-left: 3em"></span>
+            Profit/Loss:
+            <code
+              >$<span
                 data-th-text="${#numbers.formatDecimal(profitLoss,1,2,'POINT')}"
               ></span
             ></code>
@@ -246,11 +254,29 @@
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
     <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   </body>
 </html>
 
 <script th:inline="javascript">
   $(document).ready(function () {
+    let holdings = /*[[${holdings}]]*/ [];
+    console.log(holdings);
+    if (holdings.length < 1 || holdings == undefined) {
+      Swal.fire({
+                icon: "info",
+                title: "Welcome to Portfolio Tracker!",
+                html: "It appears you don't have any holdings.<br/> Click below to get started!",
+                confirmButtonColor: "#3085d6",
+                confirmButtonText: "Start",
+                allowOutsideClick: false,
+              }).then((result) => {
+                if (result.isConfirmed) {
+                 location.href="/protected/manage/portfolio";
+                }
+              });
+    }
+
     $("#portfolio").DataTable();
 
     var menu_btn = document.querySelector("#menu-btn");
