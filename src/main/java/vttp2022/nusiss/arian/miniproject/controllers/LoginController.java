@@ -54,9 +54,9 @@ public class LoginController {
         User optUser = create(form);
 
         User authUser = loginSvc.authenticate(optUser);
-
         if (authUser == null) {
             mvc.setStatus(HttpStatus.UNAUTHORIZED);
+            mvc.addObject("errorMessage","We are unable to find your account in the system. Please try logging in again or create an account.");
             mvc.setViewName("error");
             return mvc;
         }
@@ -68,7 +68,7 @@ public class LoginController {
         } catch (PortfolioException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            mvc.addObject("errorMessage", e.getReason());
+            mvc.addObject("errorMessage","Unable to authenticate your identity.");
             mvc.setStatus(HttpStatus.UNAUTHORIZED);
             mvc.setViewName("error");
             return mvc;
@@ -97,6 +97,7 @@ public class LoginController {
         try {
             if(!loginSvc.insertUser(optUser.getUsername(),optUser.getPassword()))
             {
+                mvc.addObject("errorMessage", "Unable to create account, please contact admin.");
                 mvc.setStatus(HttpStatus.UNAUTHORIZED);
                 mvc.setViewName("error");
                 return mvc;
@@ -104,7 +105,7 @@ public class LoginController {
         } catch (UserException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            mvc.addObject("errorMessage", e.getReason());
+            mvc.addObject("errorMessage", "Unable to create account, please contact admin.");
             mvc.setStatus(HttpStatus.UNAUTHORIZED);
             mvc.setViewName("error");
             return mvc;
@@ -114,6 +115,8 @@ public class LoginController {
 
         if (authUser == null) {
             mvc.setStatus(HttpStatus.UNAUTHORIZED);
+            mvc.addObject("errorMessage", "Unable to verify your identity, please try again.");
+           
             mvc.setViewName("error");
             return mvc;
         }
@@ -125,7 +128,8 @@ public class LoginController {
         } catch (PortfolioException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            mvc.addObject("errorMessage", e.getReason());
+            mvc.addObject("errorMessage", "Unable to find your portfolio, please contact admin.");
+           
             mvc.setStatus(HttpStatus.UNAUTHORIZED);
             mvc.setViewName("error");
             return mvc;
@@ -144,7 +148,17 @@ public class LoginController {
 
     @GetMapping(path = "/manage")
     public ModelAndView managePortfolio(HttpSession sess) {
+        
+        ModelAndView mvc = new ModelAndView();
 
+        User authUser = (User) sess.getAttribute("authUserSess");
+        if (authUser == null) {
+            mvc.setStatus(HttpStatus.UNAUTHORIZED);
+            mvc.addObject("errorMessage", "Unable to verify your identity, please try again.");
+           
+            mvc.setViewName("error");
+            return mvc;
+        }
         return new ModelAndView("redirect:/protected/manage/portfolio");
 
     }
@@ -166,7 +180,7 @@ public class LoginController {
         } catch (Exception ex) {
             // TODO: handle exception
             ex.printStackTrace();
-
+            return null;
         }
         return user;
     }

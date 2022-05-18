@@ -34,10 +34,17 @@ public class ProtectedController {
 
     @GetMapping(path = "/protected/manage/{view}")
     public ModelAndView managePortfolio(@PathVariable String view, HttpSession sess) {
-
+        
         ModelAndView mvc = new ModelAndView();
         mvc.setViewName(view);
+        
         User authUser = (User) sess.getAttribute("authUserSess");
+        if (authUser == null) {
+            mvc.setStatus(HttpStatus.FORBIDDEN);
+            mvc.addObject("errorMessage","ACCESS FORBIDDEN. Only registered users can access this feature.");
+            mvc.setViewName("error");
+            return mvc;
+        }
         String portfolioId = authUser.getPortfolioId();
         List<Holdings> holdings = new LinkedList<>();
 
@@ -45,7 +52,7 @@ public class ProtectedController {
             holdings = portSvc.findHoldingsByPortfolioId(portfolioId);
         } catch (PortfolioException e) {
             e.printStackTrace();
-            mvc.addObject("errorMessage", e.getReason());
+            mvc.addObject("errorMessage", "Something went wrong!");
             mvc.setStatus(HttpStatus.BAD_REQUEST);
             mvc.setViewName("error");
             return mvc;
@@ -83,13 +90,20 @@ public class ProtectedController {
         mvc.setViewName(view);
 
         User authUser = (User) sess.getAttribute("authUserSess");
+
+         if (authUser == null) {
+            mvc.setStatus(HttpStatus.UNAUTHORIZED);
+            mvc.addObject("errorMessage","ACCESS FORBIDDEN. Only registered users can access this feature.");
+            mvc.setViewName("error");
+            return mvc;
+        }
         String portfolioId = authUser.getPortfolioId();
         List<Holdings> holdings = new LinkedList<>();
         try {
             holdings = portSvc.findHoldingsByPortfolioId(portfolioId);
         } catch (PortfolioException e) {
             e.printStackTrace();
-            mvc.addObject("errorMessage", e.getReason());
+            mvc.addObject("errorMessage", "Unable to retrieve portfolio. Please try again.");
             mvc.setStatus(HttpStatus.BAD_REQUEST);
             mvc.setViewName("error");
             return mvc;
@@ -118,7 +132,7 @@ public class ProtectedController {
                 portSvc.updateCurrPrice(stock.getSymbol(), latestHolding.getCurrentPrice());
             } catch (PortfolioException e) {
                 e.printStackTrace();
-                mvc.addObject("errorMessage", e.getReason());
+                mvc.addObject("errorMessage", "Unable to get current price. The system is down.");
                 mvc.setStatus(HttpStatus.BAD_REQUEST);
                 mvc.setViewName("error");
                 return mvc;
