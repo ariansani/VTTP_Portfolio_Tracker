@@ -214,15 +214,44 @@
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script th:inline="javascript">
   $(document).ready(function () {
-    var menu_btn = document.querySelector("#menu-btn");
-    var sidebar = document.querySelector("#sidebar");
-    var container = document.querySelector(".my-container");
-    menu_btn.addEventListener("click", () => {
+
+    initMenu();
+    checkHoldingsAvailable();
+    $("#portfolio").DataTable();
+
+
+    function checkHoldingsAvailable() {
+      let holdings = /*[[${holdings}]]*/ [];
+
+      if (holdings.length < 1 || holdings == undefined) {
+        Swal.fire({
+          title: "Your portfolio is empty :(",
+          html: "Consolidate all your holdings across multiple brokers.<br/> Let's get started!",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Start",
+          allowOutsideClick: false,
+          backdrop: "rgba(0,0,123,0.4)",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            document.getElementById("addBtn").click();
+          }
+        });
+      }
+    }
+
+
+    function initMenu(){
+      let menu_btn = document.querySelector("#menu-btn");
+      let sidebar = document.querySelector("#sidebar");
+      let container = document.querySelector(".my-container");
+      menu_btn.addEventListener("click", () => {
       sidebar.classList.toggle("active-nav");
       container.classList.toggle("active-cont");
     });
+    }
 
-    $("#portfolio").DataTable();
+  
+    
 
     $("#addBtn").on("click", function () {
       (async () => {
@@ -231,6 +260,7 @@
           input: "text",
           inputLabel: "Enter Ticker Symbol",
           showCancelButton: true,
+          backdrop: "rgba(0,0,123,0.4)",
           inputValidator: (value) => {
             if (!value) {
               return "You need to write something!";
@@ -245,6 +275,7 @@
             text: `Finding price information for : ${tickerValid}`,
             timer: 2600,
             timerProgressBar: true,
+            backdrop: "rgba(0,0,123,0.4)",
             didOpen: () => {
               Swal.showLoading();
             },
@@ -274,6 +305,7 @@
                       'Quantity <input id="swal-input1"  type="number" class="swal2-input" required><br/>' +
                       'Cost Basis <input id="swal-input2"  type="number" class="swal2-input" required>',
                     focusConfirm: false,
+                    backdrop: "rgba(0,0,123,0.4)",
                     preConfirm: () => {
                       if (!document.getElementById("swal-input1").value) {
                         Swal.showValidationMessage("Please enter quantity");
@@ -307,6 +339,7 @@
                 confirmButtonColor: "#3085d6",
                 confirmButtonText: "Back",
                 footer: "Currently we only support US Equities",
+                backdrop: "rgba(0,0,123,0.4)",
               }).then((result) => {
                 if (result.isConfirmed) {
                   document.getElementById("addBtn").click();
@@ -385,6 +418,7 @@
             `Quantity <input id="swal-input3" value=${quantity} type="number" class="swal2-input" required><br/>` +
             `Cost Basis <input id="swal-input4" value=${costbasis} type="number" class="swal2-input" required>`,
           focusConfirm: false,
+          backdrop: "rgba(0,0,123,0.4)",
           preConfirm: () => {
             if (!document.getElementById("swal-input3").value) {
               Swal.showValidationMessage("Please enter quantity");
@@ -482,6 +516,7 @@
           confirmButtonText:"Delete",
           confirmButtonColor:"#c71919",
           footer: "Once deleted... we can still retrieve it for you (Contact SRE)",
+          backdrop: "rgba(0,0,123,0.4)",
           preConfirm: () => {
             
             return {

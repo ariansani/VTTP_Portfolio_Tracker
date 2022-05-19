@@ -1,8 +1,5 @@
 package vttp2022.nusiss.arian.miniproject.controllers;
 
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -144,7 +141,6 @@ public class ProtectedController {
         mvc.addObject("profitLoss", profitLoss);
         mvc.addObject("aum", assetsUnderMgmt);
         mvc.addObject("holdings", updatedPriceAndPercentage);
-        mvc.addObject("treeMapData", updatedPriceAndPercentage);
         mvc.addObject("portfolioId", portfolioId);
         mvc.addObject("authUser", authUser);
         mvc.setStatus(HttpStatus.OK);
