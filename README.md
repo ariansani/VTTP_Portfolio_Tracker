@@ -8,6 +8,4 @@ Stable Version deployed on Heroku: https://portfolio-tracker-arian.herokuapp.com
 Functions completed.
 
 Pending:
-- Error Pages
-- UI Fix
 - Test Cases
