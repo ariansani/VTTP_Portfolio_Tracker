@@ -259,171 +259,162 @@
 
 <script th:inline="javascript">
   $(document).ready(function () {
-    let holdings = /*[[${holdings}]]*/ [];
-
-    
-    if (holdings.length < 1 || holdings == undefined) {
-      Swal.fire({
-        icon: "info",
-        title: "Welcome to Portfolio Tracker!",
-        html: "It appears you don't have any holdings.<br/> Click below to get started!",
-        confirmButtonColor: "#3085d6",
-        confirmButtonText: "Start",
-        allowOutsideClick: false,
-      }).then((result) => {
-        if (result.isConfirmed) {
-          location.href = "/protected/manage/portfolio";
-        }
-      });
-    }
-
+    checkHoldingsAvailable();
+    initMenu();
+    initTreeMap();
+    initGroupedMap();
     $("#portfolio").DataTable();
 
-    var menu_btn = document.querySelector("#menu-btn");
-    var sidebar = document.querySelector("#sidebar");
-    var container = document.querySelector(".my-container");
-    menu_btn.addEventListener("click", () => {
-      sidebar.classList.toggle("active-nav");
-      container.classList.toggle("active-cont");
-    });
+    function checkHoldingsAvailable() {
+      let holdings = /*[[${holdings}]]*/ [];
 
-    let treeMapData = /*[[${holdings}]]*/ [];
-
-    var series = [];
-    let data = [];
-    let heatMapColorCheck = [];
-    for (var i = 0; i < treeMapData.length; i++) {
-      var object = {};
-      object.name =
-        treeMapData[i].symbol + "<br/>" + treeMapData[i].percentageChange;
-      object.value = treeMapData[i].quantity * treeMapData[i].currentPrice;
-      object.colorValue = treeMapData[i].percentageChange;
-
-      heatMapColorCheck.push(treeMapData[i].percentageChange);
-      data.push(object);
-    }
-
-
-
-    heatMapColorCheck.sort(function (a, b) {
-      return a - b;
-    });
-
-    let max  = Math.max(...heatMapColorCheck);
-    let min  = Math.min(...heatMapColorCheck);
-    
-    let colorAxis={
-      minColor: "#D10000",
-      maxColor: "#00D100",
-    };
-    if (max<0)
-      colorAxis.maxColor="#E65555";
-    
-    if (min>0)
-      colorAxis.minColor="#69CF69";
-
-    var seriesObject = {
-      type: "treemap",
-      layoutAlgorithm: "squarified",
-      data: data,
-    };
-    series.push(seriesObject);
-    drawHeatmap(series);
-
-    function drawHeatmap(series) {
-      Highcharts.chart("container", {
-        colorAxis: colorAxis,
-        series: series,
-        title: {
-          text: "Today's Performance",
-        },
-        // tooltip:
-        // {
-        //   formatter: function () {
-        //     return "<strong>" + this.key + ": </strong>" + this.y;
-        //   },
-        // },
-      });
-    }
-
-    var seriesOptions = [],
-      seriesCounter = 0,
-      names = ["MSFT", "AAPL", "GOOG"];
-
-    /**
-     * Create the chart when all data is loaded
-     * @return {undefined}
-     */
-    function createChart() {
-      Highcharts.stockChart("chartContainer", {
-        rangeSelector: {
-          selected: 4,
-        },
-
-        yAxis: {
-          labels: {
-            formatter: function () {
-              return (this.value > 0 ? " + " : "") + this.value + "%";
-            },
-          },
-          plotLines: [
-            {
-              value: 0,
-              width: 2,
-              color: "silver",
-            },
-          ],
-        },
-
-        plotOptions: {
-          series: {
-            compare: "percent",
-            showInNavigator: true,
-          },
-        },
-
-        tooltip: {
-          pointFormat:
-            '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.change}%)<br/>',
-          valueDecimals: 2,
-          split: true,
-        },
-
-        series: seriesOptions,
-        title: {
-          text: "Normalized Performance (Annual)",
-        },
-      });
-    }
-
-    function success(data) {
-      var name = this.url.match(/(msft|aapl|goog)/)[0].toUpperCase();
-      var i = names.indexOf(name);
-      seriesOptions[i] = {
-        name: name,
-        data: data,
-      };
-
-      // As we're loading the data asynchronously, we don't know what order it
-      // will arrive. So we keep a counter and create the chart when all the data is loaded.
-      seriesCounter += 1;
-
-      if (seriesCounter === names.length) {
-        createChart();
+      if (holdings.length < 1 || holdings == undefined) {
+        Swal.fire({
+          icon: "info",
+          title: "Welcome to Portfolio Tracker!",
+          html: "It appears you don't have any holdings.<br/> Click below to get started!",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Start",
+          allowOutsideClick: false,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            location.href = "/protected/manage/portfolio";
+          }
+        });
       }
     }
 
-    Highcharts.getJSON(
-      "https://cdn.jsdelivr.net/gh/highcharts/highcharts@v7.0.0/samples/data/msft-c.json",
-      success
-    );
-    Highcharts.getJSON(
-      "https://cdn.jsdelivr.net/gh/highcharts/highcharts@v7.0.0/samples/data/aapl-c.json",
-      success
-    );
-    Highcharts.getJSON(
-      "https://cdn.jsdelivr.net/gh/highcharts/highcharts@v7.0.0/samples/data/goog-c.json",
-      success
-    );
+    function initMenu() {
+      let menu_btn = document.querySelector("#menu-btn");
+      let sidebar = document.querySelector("#sidebar");
+      let container = document.querySelector(".my-container");
+      menu_btn.addEventListener("click", () => {
+        sidebar.classList.toggle("active-nav");
+        container.classList.toggle("active-cont");
+      });
+    }
+
+    function initTreeMap() {
+      let treeMapData = /*[[${holdings}]]*/ [];
+
+      var series = [];
+      let data = [];
+      let heatMapColorCheck = [];
+      for (var i = 0; i < treeMapData.length; i++) {
+        var object = {};
+        object.name =
+          treeMapData[i].symbol + "<br/>" + treeMapData[i].percentageChange;
+        object.value = treeMapData[i].quantity * treeMapData[i].currentPrice;
+        object.colorValue = treeMapData[i].percentageChange;
+
+        heatMapColorCheck.push(treeMapData[i].percentageChange);
+        data.push(object);
+      }
+
+      heatMapColorCheck.sort(function (a, b) {
+        return a - b;
+      });
+
+      let max = Math.max(...heatMapColorCheck);
+      let min = Math.min(...heatMapColorCheck);
+
+      let colorAxis = {
+        minColor: "#D10000",
+        maxColor: "#00D100",
+      };
+      if (max < 0) colorAxis.maxColor = "#E65555";
+
+      if (min > 0) colorAxis.minColor = "#69CF69";
+
+      var seriesObject = {
+        type: "treemap",
+        layoutAlgorithm: "squarified",
+        data: data,
+      };
+      series.push(seriesObject);
+      drawHeatmap(series);
+
+      function drawHeatmap(series) {
+        Highcharts.chart("container", {
+          colorAxis: colorAxis,
+          series: series,
+          title: {
+            text: "Today's Performance",
+          },
+          // tooltip:
+          // {
+          //   formatter: function () {
+          //     return "<strong>" + this.key + ": </strong>" + this.y;
+          //   },
+          // },
+        });
+      }
+    }
+
+    function initGroupedMap() {
+      let groupMapData = /*[[${holdings}]]*/ [];
+
+      console.log(groupMapData);
+      let categories = [];
+      let purchaseValue = [];
+      let currentMarketValue= [];
+      for (var i = 0; i < groupMapData.length; i++) {
+       categories.push(groupMapData[i].symbol);
+       purchaseValue.push(parseFloat((groupMapData[i].quantity * groupMapData[i].costBasis).toFixed(2)));
+       currentMarketValue.push(parseFloat((groupMapData[i].totalValue).toFixed(2)));
+      }
+      
+
+      Highcharts.chart("chartContainer", {
+        chart: {
+          type: "column",
+        },
+        title: {
+          text: "Overall Performance",
+        },
+        subtitle: {
+          text: "Diamond Hands",
+        },
+        xAxis: {
+          categories: categories,
+          crosshair: true,
+        },
+        yAxis: {
+          min: 0,
+          title: {
+            text: "Value ($)",
+          },
+        },
+        tooltip: {
+          headerFormat:
+            '<span style="font-size:10px">{point.key}</span><table>',
+          pointFormat:
+            '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+            '<td style="padding:0"><b>${point.y:.1f} </b></td></tr>',
+          footerFormat: "</table>",
+          shared: true,
+          useHTML: true,
+        },
+        plotOptions: {
+          column: {
+            pointPadding: 0.2,
+            borderWidth: 0,
+          },
+        },
+        series: [
+          {
+            name: "Purchase Value",
+            data: purchaseValue,
+            color: "#454545",
+          },
+          {
+            name: "Current Market Value",
+            data: currentMarketValue,
+            color: "#800080",
+          },
+          
+        ],
+      });
+    }
   });
 </script>
