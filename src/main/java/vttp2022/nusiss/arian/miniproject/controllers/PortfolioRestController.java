@@ -35,23 +35,16 @@ public class PortfolioRestController {
             @RequestBody String searchSymbol) {
 
         Holdings holding = new Holdings();
-        try {
-            Optional<Holdings> optHolding = portSvc.retrieveStockPriceByTicker(searchSymbol);
-            if (optHolding.isEmpty()) {
 
-                JsonObject errJson = Json.createObjectBuilder()
-                        .add("errorMessage", "Cannot find : %s".formatted(searchSymbol)).build();
-                return ResponseEntity.status(400).body(errJson.toString());
+        Optional<Holdings> optHolding = portSvc.retrieveStockPriceByTicker(searchSymbol);
+        if (optHolding.isEmpty()) {
 
-            }
-            holding = optHolding.get();
-        } catch (Exception e) {
-            // TODO: handle exception
-            e.printStackTrace();
             JsonObject errJson = Json.createObjectBuilder()
                     .add("errorMessage", "Cannot find : %s".formatted(searchSymbol)).build();
             return ResponseEntity.status(400).body(errJson.toString());
+
         }
+        holding = optHolding.get();
 
         // JsonObject response = Json.createObjectBuilder()
         // .add("message", "found it").build();
@@ -66,29 +59,21 @@ public class PortfolioRestController {
         try (InputStream is = new ByteArrayInputStream(payload.getBytes(StandardCharsets.UTF_8))) {
             JsonReader reader = Json.createReader(is);
             JsonObject o = reader.readObject();
-            
-            //let Java handle the type safety instead of parsing datatypes in Javascript
+
+            // let Java handle the type safety instead of parsing datatypes in Javascript
             Holdings holding = new Holdings();
             holding.setPortfolioId(o.getString("portfolioId"));
             holding.setSymbol(o.getString("symbol"));
-                String quantity =  o.getString("quantity");
+            String quantity = o.getString("quantity");
             holding.setQuantity(Integer.valueOf(quantity));
-                
-            holding.setCostBasis(Float.valueOf(o.getString("costBasis")) );
+
+            holding.setCostBasis(Float.valueOf(o.getString("costBasis")));
             holding.setCurrentPrice(Double.valueOf(o.getString("currentPrice")));
             holding.setIsActive(true);
 
-            
             boolean addedSuccessfully;
-            try {
-                addedSuccessfully=portSvc.addHoldingToPortfolio(holding);
-            } catch (PortfolioException e) {
-                //TODO: handle exception
-                JsonObject errJson = Json.createObjectBuilder()
-                .add("errorMessage",e.getReason()).build();
-                return ResponseEntity.status(400).body(errJson.toString());
-            }
 
+            addedSuccessfully = portSvc.addHoldingToPortfolio(holding);
 
             responseJson = Json.createObjectBuilder()
                     .add("status", addedSuccessfully)
@@ -104,7 +89,6 @@ public class PortfolioRestController {
         return ResponseEntity.ok(responseJson.toString());
     }
 
-
     @PutMapping(path = "/edit", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> editHolding(
             @RequestBody String payload) {
@@ -113,25 +97,17 @@ public class PortfolioRestController {
         try (InputStream is = new ByteArrayInputStream(payload.getBytes(StandardCharsets.UTF_8))) {
             JsonReader reader = Json.createReader(is);
             JsonObject o = reader.readObject();
-            
-            //let Java handle the type safety instead of parsing datatypes in Javascript
+
+            // let Java handle the type safety instead of parsing datatypes in Javascript
             Holdings holding = new Holdings();
             holding.setId(Integer.valueOf(o.getString("holdingId")));
             holding.setQuantity(Integer.valueOf(o.getString("quantity")));
             holding.setSymbol(o.getString("symbol"));
             holding.setCostBasis(Float.valueOf(o.getString("costBasis")));
 
-            
             boolean editSuccess;
-            try {
-                editSuccess=portSvc.editHolding(holding);
-            } catch (PortfolioException e) {
-                //TODO: handle exception
-                JsonObject errJson = Json.createObjectBuilder()
-                .add("errorMessage", e.getReason()).build();
-                return ResponseEntity.status(400).body(errJson.toString());
-            }
 
+            editSuccess = portSvc.editHolding(holding);
 
             responseJson = Json.createObjectBuilder()
                     .add("status", editSuccess)
@@ -155,23 +131,21 @@ public class PortfolioRestController {
         try (InputStream is = new ByteArrayInputStream(payload.getBytes(StandardCharsets.UTF_8))) {
             JsonReader reader = Json.createReader(is);
             JsonObject o = reader.readObject();
-            
-            //let Java handle the type safety instead of parsing datatypes in Javascript
+
+            // let Java handle the type safety instead of parsing datatypes in Javascript
             Holdings holding = new Holdings();
             holding.setId(Integer.valueOf(o.getString("holdingId")));
             holding.setSymbol(o.getString("symbol"));
 
-            
             boolean deactivateSuccess;
             try {
-                deactivateSuccess=portSvc.deactivateHolding(holding);
+                deactivateSuccess = portSvc.deactivateHolding(holding);
             } catch (PortfolioException e) {
-                //TODO: handle exception
+                // TODO: handle exception
                 JsonObject errJson = Json.createObjectBuilder()
-                .add("errorMessage", e.getReason()).build();
+                        .add("errorMessage", e.getReason()).build();
                 return ResponseEntity.status(400).body(errJson.toString());
             }
-
 
             responseJson = Json.createObjectBuilder()
                     .add("status", deactivateSuccess)
