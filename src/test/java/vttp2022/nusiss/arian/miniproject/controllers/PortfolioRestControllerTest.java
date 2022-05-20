@@ -44,13 +44,14 @@ public class PortfolioRestControllerTest {
         Holdings holding = new Holdings();
 
         Mockito.when(portSvc.addHoldingToPortfolio(holding))
-        .thenReturn(true);
-        
+                .thenReturn(true);
+
         ResponseEntity<String> result = portfolioRestCtrl.addHoldingToPortfolio(json);
         Integer priceResult = result.getStatusCodeValue();
-        
+
         assertEquals(200, priceResult);
     }
+
     @Test
     void testAddHoldingToPortfolioInvalid() {
 
@@ -60,15 +61,64 @@ public class PortfolioRestControllerTest {
         assertEquals(expected.length() > 0, failResult.length() > 2);
     }
 
-
     @Test
-    void testDeactivateHolding() {
+    void testDeactivateHolding() throws PortfolioException {
 
+        JsonObject responseJson = Json.createObjectBuilder()
+                .add("holdingId", "1")
+                .add("symbol", "AAPL")
+                .build();
+        String json = responseJson.toString();
+
+        Holdings holding = new Holdings();
+
+        Mockito.when(portSvc.deactivateHolding(holding))
+                .thenReturn(true);
+
+        ResponseEntity<String> result = portfolioRestCtrl.deactivateHolding(json);
+        Integer priceResult = result.getStatusCodeValue();
+
+        assertEquals(200, priceResult);
     }
 
     @Test
-    void testEditHolding() {
+    void testDeactivateHoldingInvalid() {
 
+        ResponseEntity<String> result = portfolioRestCtrl.deactivateHolding(null);
+        String failResult = result.getBody();
+        String expected = "{}";
+        assertEquals(expected.length() > 0, failResult.length() > 2);
+    }
+
+    @Test
+    void testEditHolding() throws PortfolioException {
+
+        JsonObject responseJson = Json.createObjectBuilder()
+                .add("holdingId", "1")
+                .add("symbol", "AAPL")
+                .add("quantity", "10")
+                .add("costBasis", "15.33")
+                .build();
+        String json = responseJson.toString();
+
+        Holdings holding = new Holdings();
+
+        Mockito.when(portSvc.editHolding(holding))
+                .thenReturn(true);
+
+        ResponseEntity<String> result = portfolioRestCtrl.editHolding(json);
+        Integer priceResult = result.getStatusCodeValue();
+
+        assertEquals(200, priceResult);
+    }
+
+    @Test
+    void testEditHoldingInvalid() {
+
+        ResponseEntity<String> result = portfolioRestCtrl.editHolding(null);
+        String failResult = result.getBody();
+        String expected = "{}";
+        assertEquals(expected.length() > 0, failResult.length() > 2);
     }
 
     @Test

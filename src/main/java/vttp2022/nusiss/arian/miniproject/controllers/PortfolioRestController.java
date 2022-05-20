@@ -138,14 +138,8 @@ public class PortfolioRestController {
             holding.setSymbol(o.getString("symbol"));
 
             boolean deactivateSuccess;
-            try {
-                deactivateSuccess = portSvc.deactivateHolding(holding);
-            } catch (PortfolioException e) {
-                // TODO: handle exception
-                JsonObject errJson = Json.createObjectBuilder()
-                        .add("errorMessage", e.getReason()).build();
-                return ResponseEntity.status(400).body(errJson.toString());
-            }
+
+            deactivateSuccess = portSvc.deactivateHolding(holding);
 
             responseJson = Json.createObjectBuilder()
                     .add("status", deactivateSuccess)
