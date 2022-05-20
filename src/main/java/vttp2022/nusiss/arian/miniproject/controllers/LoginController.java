@@ -31,19 +31,32 @@ public class LoginController {
     private PortfolioService portSvc;
 
     @GetMapping
-    public String loadIndex() {
-        return "index";
+    public ModelAndView loadIndex() {
+        ModelAndView mvc = new ModelAndView();
+        mvc.setViewName("index");
+        mvc.setStatus(HttpStatus.OK);
+
+        return mvc;
     }
 
     @GetMapping("/logout")
-    public String getLogout(HttpSession sess) {
+    public ModelAndView getLogout(HttpSession sess) {
+
         sess.invalidate();
-        return "index";
+        ModelAndView mvc = new ModelAndView();
+        mvc.setViewName("index");
+        mvc.setStatus(HttpStatus.OK);
+
+        return mvc;
     }
 
     @GetMapping("/signup")
-    public String loadSignUp() {
-        return "signup";
+    public ModelAndView loadSignUp() {
+        ModelAndView mvc = new ModelAndView();
+        mvc.setViewName("signup");
+        mvc.setStatus(HttpStatus.OK);
+
+        return mvc;
     }
 
     @PostMapping(path = "/authenticate")
@@ -56,19 +69,19 @@ public class LoginController {
         User authUser = loginSvc.authenticate(optUser);
         if (authUser == null) {
             mvc.setStatus(HttpStatus.UNAUTHORIZED);
-            mvc.addObject("errorMessage","We are unable to find your account in the system. Please try logging in again or create an account.");
+            mvc.addObject("errorMessage",
+                    "We are unable to find your account in the system. Please try logging in again or create an account.");
             mvc.setViewName("error");
             return mvc;
         }
 
-
-        String portfolioId="";
+        String portfolioId = "";
         try {
-             portfolioId =  portSvc.findPortfolioByUserId(authUser.getUserId());
+            portfolioId = portSvc.findPortfolioByUserId(authUser.getUserId());
         } catch (PortfolioException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            mvc.addObject("errorMessage","Unable to authenticate your identity.");
+            mvc.addObject("errorMessage", "Unable to authenticate your identity.");
             mvc.setStatus(HttpStatus.UNAUTHORIZED);
             mvc.setViewName("error");
             return mvc;
@@ -79,9 +92,8 @@ public class LoginController {
         sess.setAttribute("username", authUser.getUsername());
         sess.setAttribute("authUserSess", authUser);
 
-        //mvc.addObject("authUser", authUser);
+        // mvc.addObject("authUser", authUser);
         mvc = new ModelAndView("redirect:/protected/dashboard");
-
 
         return mvc;
 
@@ -95,8 +107,7 @@ public class LoginController {
         User optUser = create(form);
 
         try {
-            if(!loginSvc.insertUser(optUser.getUsername(),optUser.getPassword()))
-            {
+            if (!loginSvc.insertUser(optUser.getUsername(), optUser.getPassword())) {
                 mvc.addObject("errorMessage", "Unable to create account, please contact admin.");
                 mvc.setStatus(HttpStatus.UNAUTHORIZED);
                 mvc.setViewName("error");
@@ -116,20 +127,19 @@ public class LoginController {
         if (authUser == null) {
             mvc.setStatus(HttpStatus.UNAUTHORIZED);
             mvc.addObject("errorMessage", "Unable to verify your identity, please try again.");
-           
+
             mvc.setViewName("error");
             return mvc;
         }
 
-
-        String portfolioId="";
+        String portfolioId = "";
         try {
-             portfolioId =  portSvc.findPortfolioByUserId(authUser.getUserId());
+            portfolioId = portSvc.findPortfolioByUserId(authUser.getUserId());
         } catch (PortfolioException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
             mvc.addObject("errorMessage", "Unable to find your portfolio, please contact admin.");
-           
+
             mvc.setStatus(HttpStatus.UNAUTHORIZED);
             mvc.setViewName("error");
             return mvc;
@@ -148,14 +158,14 @@ public class LoginController {
 
     @GetMapping(path = "/manage")
     public ModelAndView managePortfolio(HttpSession sess) {
-        
+
         ModelAndView mvc = new ModelAndView();
 
         User authUser = (User) sess.getAttribute("authUserSess");
         if (authUser == null) {
             mvc.setStatus(HttpStatus.UNAUTHORIZED);
             mvc.addObject("errorMessage", "Unable to verify your identity, please try again.");
-           
+
             mvc.setViewName("error");
             return mvc;
         }
@@ -166,22 +176,17 @@ public class LoginController {
     // @GetMapping(path = "/search")
     // public ModelAndView search(HttpSession sess) {
 
-    //     return new ModelAndView("redirect:/protected/search");
+    // return new ModelAndView("redirect:/protected/search");
 
     // }
 
-    private User create(MultiValueMap<String, String> form) {
+    public User create(MultiValueMap<String, String> form) {
 
         User user = new User();
-        try {
-            user.setUsername(form.getFirst("username"));
-            user.setPassword(form.getFirst("password"));
 
-        } catch (Exception ex) {
-            // TODO: handle exception
-            ex.printStackTrace();
-            return null;
-        }
+        user.setUsername(form.getFirst("username"));
+        user.setPassword(form.getFirst("password"));
+
         return user;
     }
 }

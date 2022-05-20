@@ -1,17 +1,14 @@
 package vttp2022.nusiss.arian.miniproject.services;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
+
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.http.RequestEntity;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.client.RestTemplate;
 
-import jakarta.json.JsonObject;
 import vttp2022.nusiss.arian.miniproject.exceptions.PortfolioException;
 import vttp2022.nusiss.arian.miniproject.models.Holdings;
 import vttp2022.nusiss.arian.miniproject.models.Stock;
@@ -45,7 +42,13 @@ public class PortfolioServiceTest {
 
         Mockito.when(portfolioRepo.addHoldingToPortfolio(holding))
                 .thenReturn(true);
-        Boolean success = portfolioRepo.addHoldingToPortfolio(holding);
+        Boolean success = true;
+        try {
+            success = portSvc.addHoldingToPortfolio(holding);
+        } catch (PortfolioException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         assertEquals(true, success);
 
     }
@@ -69,7 +72,13 @@ public class PortfolioServiceTest {
 
         Mockito.when(portfolioRepo.deactivateHolding(holding))
                 .thenReturn(true);
-        Boolean success = portfolioRepo.deactivateHolding(holding);
+        Boolean success=true;
+        try {
+            success = portSvc.deactivateHolding(holding);
+        } catch (PortfolioException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         assertEquals(true, success);
     }
 
@@ -90,7 +99,13 @@ public class PortfolioServiceTest {
 
         Mockito.when(portfolioRepo.editHolding(holding))
                 .thenReturn(true);
-        Boolean success = portfolioRepo.editHolding(holding);
+        Boolean success=true;
+        try {
+            success = portSvc.editHolding(holding);
+        } catch (PortfolioException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         assertEquals(true, success);
     }
 
