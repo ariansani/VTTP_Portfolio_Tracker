@@ -199,7 +199,7 @@ public class PortfolioServiceTest {
 
 
     @Test
-    void testRetrieveStockFinancialsByTicker() {
+    void testRetrieveStockFinancialsByTicker() throws PortfolioException {
         String symbol = "AAPL";
 
         Optional<Stock> opt = portSvc.retrieveStockFinancialsByTicker(symbol);

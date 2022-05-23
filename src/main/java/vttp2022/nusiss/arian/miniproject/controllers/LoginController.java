@@ -64,8 +64,9 @@ public class LoginController {
 
         ModelAndView mvc = new ModelAndView();
 
+        
         User optUser = create(form);
-
+     
         User authUser = loginSvc.authenticate(optUser);
         if (authUser == null) {
             mvc.setStatus(HttpStatus.UNAUTHORIZED);
@@ -85,7 +86,7 @@ public class LoginController {
             mvc.setStatus(HttpStatus.UNAUTHORIZED);
             mvc.setViewName("error");
             return mvc;
-        }
+        } 
 
         authUser.setPortfolioId(portfolioId);
         sess.setAttribute("userId", authUser.getUserId());
